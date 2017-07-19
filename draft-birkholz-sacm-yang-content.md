@@ -1,4 +1,4 @@
-﻿---
+---
 title: YANG subscribed notifications via SACM Statements
 docname: draft-birkholz-sacm-yang-content-latest
 date: 2017-07-19
