@@ -38,17 +38,18 @@ author:
 
 normative:
   RFC2119:
-  RFC3635:
-  RFC1573:
-  # I-D.ietf-sacm-architecture-13:
-  I.D-ietf-netconf-subscribed-notification: yangnote
-  I.D-ietf-netconf-yang-push: yangpush
-  I.D-ietf-sacm-information-model: sacmim
-  I-D-ietf-mile-xmpp-grid: xmppgrid
- 
+#  RFC3635:
+#  RFC1573:
+#  I-D.greevenbosch-appsawg-cbor-cddl: cddl
+#  I-D.ietf-sacm-architecture-13:
+  I-D.ietf-netconf-subscribed-notifications: yangnote
+  I-D.ietf-netconf-yang-push: yangpush
+  I-D.ietf-sacm-information-model: sacmim
+  I-D.ietf-mile-xmpp-grid: xmppgrid
+
 informative:
-  RFC7632:
-  I-D.ietf-sacm-requirements: sacm-req
+#  RFC7632:
+#  I-D.ietf-sacm-requirements: sacm-req
 
 --- abstract
 
@@ -67,7 +68,7 @@ orchestrate assessment instructions, and also the declarative guidance for endpo
 # Introduction
 
 YANG modules are a powerful established tool to provide endpoint attributes (IE) with well-defined
-semantics. YANG push [yangpush] and the corresponding YANG subscribed notification [yangnote] drafts
+semantics. YANG push {{-yangpush}} and the corresponding YANG subscribed notification {{-yangnote}} drafts
 make use of these modules to create streams of notifications (telemetry) providing SACM content on
 the data plane.
 Correspondingly, filter expressions used in the context of YANG subscriptions constitute SACM
@@ -258,5 +259,5 @@ Due to the stripping down of content-elements to YANG output, the enumerations s
 relationship type are not able to point to other content actually.
 
 ~~~~ XSD
-
-
+TBD
+~~~~
