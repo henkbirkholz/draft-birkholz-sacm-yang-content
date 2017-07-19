@@ -1,0 +1,638 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>YANG subscribed notifications via SACM Statements</title>
+
+  
+<style type="text/css">/*<![CDATA[*/
+@viewport {
+  zoom: 1.0;
+  width: extend-to-zoom;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+
+@media screen and (min-width: 1024px) {
+  ul.toc, #rfc\.toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 525px);
+    width: 300px;
+    z-index: 1;
+  }
+  #rfc\.toc {
+    top: 15px;
+  }
+  ul.toc {
+    top: 80px;
+    overflow: auto;
+  }
+
+  body {
+    padding-right: 350px;
+  }
+}
+
+body {
+  font: 15px "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #333;
+  font-size-adjust: 0.5;
+  line-height: 130%;
+  margin: 25px auto;
+  max-width: 724px;
+}
+
+.title, .filename, h1, h2, h3, h4 {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size-adjust: 0.5;
+  font-weight: 500;
+  color: #333;
+  line-height: 100%;
+  margin: 0.8em 0 0.3em;
+}
+.title { font-size: 36px; }
+h1 { font-size: 30px; }
+h2 { font-size: 24px; }
+h3, h4 { font-size: 18px; }
+h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
+  color: #333;
+}
+
+ul.toc li {
+  list-style: none;
+  text-indent: -2.5em;
+  padding-left: 2.5em;
+  padding-bottom: 5px;
+  margin: 0;
+}
+ul.toc ul {
+  margin: 0;
+}
+/* xml2rfc nests ul directly inside ul which messes with the style badly */
+ul.toc, ul.toc>ul, ul.toc ul>ul {
+  margin: 0 0 0 1.5em;
+}
+
+table {
+  margin-left: 0em;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+}
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
+  background-color: #f9f9f9;
+}
+td.reference {
+  max-width: 200px;
+  border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
+}
+
+
+table.header {
+  width: 100%;
+}
+table.header td {
+  border: none;
+  background-color: transparent;
+  color: black;
+}
+.filename {
+  color: rgb(119, 119, 119);
+  font-size: 23px;
+  font-weight: normal;
+  height: auto;
+  line-height: 100%;
+}
+#rfc\.abstract+p {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 130%;
+}
+
+samp, tt, code, pre {
+  font: 11pt consolas, monospace;
+  font-size-adjust: none;
+}
+pre {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+  padding: 5px;
+  margin: 5px;
+}
+.figure {
+  font-style: italic;
+  margin: 0 1.5em;
+}
+
+address {
+  margin: 10px 0 0;
+}
+.vcard {
+  font-style: normal;
+}
+.vcardline {
+  display: block;
+}
+.vcardline .fn {
+  font-weight: bold;
+}
+.vcardline .hidden {
+  display: none;
+}
+
+dl {
+  margin-left: 1em;
+}
+dl.dl-horizontal: {
+  margin-left: 0;
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.nohang > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .5em;
+}
+dl.compact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+ul.empty {
+  list-style-type: none;
+}
+ul.empty li {
+  margin-top: .5em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #2a6496;
+}
+a[href]:hover {
+  background-color: #eee;
+}
+
+ol, ul, li, p {
+  padding: 0;
+  margin: 0.5em 0 0.5em 2em;
+}
+li, p {
+  margin-left: 0;
+}
+address {
+  font-style: normal;
+}
+
+.github-fork-ribbon-wrapper {
+  display: none;
+}
+@media screen and (min-width: 800px) {
+  /* "Fork me on GitHub" CSS ribbon based on
+   * https://github.com/simonwhitaker/github-fork-ribbon-css
+   */
+  .github-fork-ribbon {
+    position: absolute;
+    padding: 2px 0;
+    background-color: #a00;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+    font: 700 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    pointer-events: auto;
+
+    top: 38px;
+    right: -45px;
+
+    transform: rotate(45deg);
+  }
+
+  .github-fork-ribbon a[href],
+  .github-fork-ribbon a[href]:hover {
+    color: #fff;
+    background-color: transparent;
+    text-decoration: none;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    width: 190px;
+    line-height: 18px;
+
+    display: inline-block;
+    padding: 2px 0;
+
+    border: 1.5px dotted #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .github-fork-ribbon-wrapper {
+    display: block;
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    overflow: hidden;
+    top: 0; right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .github-fork-ribbon-wrapper {
+    position: fixed;
+  }
+  /*]]>*/</style>
+
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.2" rel="Chapter" title="2 Requirements notation">
+<link href="#rfc.section.3" rel="Chapter" title="3 Brokering of YANG push telemetry via SACM statements">
+<link href="#rfc.section.4" rel="Chapter" title="4 Encapsulation of YANG notifications in SACM content-elements">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Element definition for content-metadata">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Definition of the yang-output-metadata element included in content-metadata">
+<link href="#rfc.section.5" rel="Chapter" title="5 SACM Component Composition">
+<link href="#rfc.section.6" rel="Chapter" title="6 IANA considerations">
+<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
+<link href="#rfc.section.8" rel="Chapter" title="8 Acknowledgements">
+<link href="#rfc.section.9" rel="Chapter" title="9 Change Log">
+<link href="#rfc.section.10" rel="Chapter" title="10 Contributors">
+<link href="#rfc.references" rel="Chapter" title="11 Normative References">
+<link href="#rfc.appendix.A" rel="Chapter" title="A Minimal SACM Statement Definition for YANG Output">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.7.0 - http://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Birkholz, H. and N. Cam-Winget" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-birkholz-sacm-yang-content-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-7-19" />
+  <meta name="dct.abstract" content="This document summarizes the data model designed at the IETF 99 Hackathon and is intended to grow in to a definition of general XML SACM statements (and later JSON and CBOR, respectively) for virtually every kind of Content Element (e.g. software identifiers, assessment guidance/results, ECA Policy rules, VDD, etc.). The SACM Statement data structure is based on the Information Element (IE) definitions provided by the SACM Information Model. The initial Content Element type transferred are YANG Subscribed Notification acquired via YANG push. In combination with the Origin Metadata Annotation defined in draft-ietf-netmod-revised-datastores the data model defined in this document will ultimately be able to express collected endpoint characteristics, imperative guidance that define and orchestrate assessment instructions, and also the declarative guidance for endpoint attributes." />
+  <meta name="description" content="This document summarizes the data model designed at the IETF 99 Hackathon and is intended to grow in to a definition of general XML SACM statements (and later JSON and CBOR, respectively) for virtually every kind of Content Element (e.g. software identifiers, assessment guidance/results, ECA Policy rules, VDD, etc.). The SACM Statement data structure is based on the Information Element (IE) definitions provided by the SACM Information Model. The initial Content Element type transferred are YANG Subscribed Notification acquired via YANG push. In combination with the Origin Metadata Annotation defined in draft-ietf-netmod-revised-datastores the data model defined in this document will ultimately be able to express collected endpoint characteristics, imperative guidance that define and orchestrate assessment instructions, and also the declarative guidance for endpoint attributes." />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">SACM Working Group</td>
+<td class="right">H. Birkholz</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">Fraunhofer SIT</td>
+</tr>
+<tr>
+<td class="left">Intended status: Standards Track</td>
+<td class="right">N. Cam-Winget</td>
+</tr>
+<tr>
+<td class="left">Expires: January 20, 2018</td>
+<td class="right">Cisco Systems</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">July 19, 2017</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">YANG subscribed notifications via SACM Statements<br />
+  <span class="filename">draft-birkholz-sacm-yang-content-latest</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>This document summarizes the data model designed at the IETF 99 Hackathon and is intended to grow in to a definition of general XML SACM statements (and later JSON and CBOR, respectively) for virtually every kind of Content Element (e.g. software identifiers, assessment guidance/results, ECA Policy rules, VDD, etc.). The SACM Statement data structure is based on the Information Element (IE) definitions provided by the SACM Information Model. The initial Content Element type transferred are YANG Subscribed Notification acquired via YANG push. In combination with the Origin Metadata Annotation defined in draft-ietf-netmod-revised-datastores the data model defined in this document will ultimately be able to express collected endpoint characteristics, imperative guidance that define and orchestrate assessment instructions, and also the declarative guidance for endpoint attributes.</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on January 20, 2018.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<li>2.   <a href="#rfc.section.2">Requirements notation</a>
+</li>
+<li>3.   <a href="#rfc.section.3">Brokering of YANG push telemetry via SACM statements</a>
+</li>
+<li>4.   <a href="#rfc.section.4">Encapsulation of YANG notifications in SACM content-elements</a>
+</li>
+<ul><li>4.1.   <a href="#rfc.section.4.1">Element definition for content-metadata</a>
+</li>
+<li>4.2.   <a href="#rfc.section.4.2">Definition of the yang-output-metadata element included in content-metadata</a>
+</li>
+</ul><li>5.   <a href="#rfc.section.5">SACM Component Composition</a>
+</li>
+<li>6.   <a href="#rfc.section.6">IANA considerations</a>
+</li>
+<li>7.   <a href="#rfc.section.7">Security Considerations</a>
+</li>
+<li>8.   <a href="#rfc.section.8">Acknowledgements</a>
+</li>
+<li>9.   <a href="#rfc.section.9">Change Log</a>
+</li>
+<li>10.   <a href="#rfc.section.10">Contributors</a>
+</li>
+<li>11.   <a href="#rfc.references">Normative References</a>
+</li>
+<li>Appendix A.   <a href="#rfc.appendix.A">Minimal SACM Statement Definition for YANG Output</a>
+</li>
+<li><a href="#rfc.authors">Authors' Addresses</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">YANG modules are a powerful established tool to provide endpoint attributes (IE) with well-defined semantics. YANG push <a href="#I-D.ietf-netconf-yang-push" class="xref">[I-D.ietf-netconf-yang-push]</a> and the corresponding YANG subscribed notification <a href="#I-D.ietf-netconf-subscribed-notifications" class="xref">[I-D.ietf-netconf-subscribed-notifications]</a> drafts make use of these modules to create streams of notifications (telemetry) providing SACM content on the data plane.  Correspondingly, filter expressions used in the context of YANG subscriptions constitute SACM content that is imperative guidance consumed by SACM components on the management plane.</p>
+<p id="rfc.section.1.p.2">The SACM component illustrated in this draft incorporates a YANG Push client function and an xmpp-grid publisher function. The output of the YANG Push client function is encapsulated in a SACM Content Element envelope, which is again encapsulated in a SACM statement envelope. The corresponding SACM statements are published via the xmpp-grid publisher function into a SACM Domain.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#requirements-notation" id="requirements-notation">Requirements notation</a>
+</h1>
+<p id="rfc.section.2.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119, BCP 14 <a href="#RFC2119" class="xref">[RFC2119]</a>.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#brokering-of-yang-push-telemetry-via-sacm-statements" id="brokering-of-yang-push-telemetry-via-sacm-statements">Brokering of YANG push telemetry via SACM statements</a>
+</h1>
+<p id="rfc.section.3.p.1">Every SACM content is published into a SACM domain using a statement envelope/encapsulation. The general structure of a Statement is based in the Information Element defintion in <a href="#I-D.ietf-sacm-information-model" class="xref">[I-D.ietf-sacm-information-model]</a> and can be summarized as follows:</p>
+<p></p>
+
+<ul>
+<li>a statement encapsulates statement-metadata and content-elements</li>
+<li>a content-element encapsulates content-metadata and SACM content</li>
+</ul>
+<p id="rfc.section.3.p.3">In the scope of this document, only one type of SACM content is covered: YANG output.  Correspondingly, only the minimal required structure of statements, statement-metadata, content-elements, and content-metadata are defined. A complete XML schema definition of this minimal statement can be found in Appendix A.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#encapsulation-of-yang-notifications-in-sacm-content-elements" id="encapsulation-of-yang-notifications-in-sacm-content-elements">Encapsulation of YANG notifications in SACM content-elements</a>
+</h1>
+<p id="rfc.section.4.p.1">A YANG notification is associated with a set of YANG specific metadata. Hence, a YANG notification published to a SACM Domain MUST be encapsulated with its corresponding metadata in a Content Element as defined below.</p>
+<p id="rfc.section.4.p.2">YANG output that is SACM content is represented as an element defintion included in the content choice of the content-element.</p>
+<pre>
+&lt;xs:complexType name="content-element"&gt;
+  &lt;xs:sequence&gt;
+    &lt;xs:element name="content-metadata" type="content-metadata" maxOccurs="unbounded"/&gt;
+    &lt;xs:choice&gt;
+      &lt;xs:element name="yang-output" type="yang-output" /&gt;
+        &lt;!-- There is only one element here now, but virtually every other content choice
+             will go here, i.e. data models, such as OVAL, SCAP, SWID, etc. --&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+
+## Enumeration definition for content-type
+
+One occurrence of the yang-output element MUST be instantiated in the content-metadata element if
+YANG push output is to be transferred. Also, the content-type must be set to the enumeration value
+"yang-output", respectively.
+
+In general, the list of content-type enumerations is including every subject as defined in the SACM
+Information Model. For the scope of this document, the list of potential content is reduced to
+"yang-output" only.
+
+~~~~ XSD
+&lt;xs:simpleType name="content-type"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:enumeration value="yang-output" /&gt;
+       &lt;!-- There is only one type here now, but virtually every other content-type
+            will go here, i.e. data models, such as OVAL, SCAP, SWID, etc. --&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+</pre>
+<h1 id="rfc.section.4.1">
+<a href="#rfc.section.4.1">4.1.</a> <a href="#element-definition-for-content-metadata" id="element-definition-for-content-metadata">Element definition for content-metadata</a>
+</h1>
+<p id="rfc.section.4.1.p.1">The list of optional elements included in content-metadata will incorporate any every potential metadata type. For the scope of this document, the list of elements is also limited to the minimal required set of metadata elements and the yang-output metadata element to support the encapsulation of NETCONF subscribed notifications and YANG query result. As defined above, one occurrence of the yang-output element has to be included in the content-metadata element.</p>
+<p id="rfc.section.4.1.p.2">The general content-metadata elements are illustrated in the Appendix A.</p>
+<pre>
+&lt;xs:complexType name="content-metadata"&gt;
+  &lt;xs:sequence&gt;
+    &lt;xs:element name="content-element-guid" type="content-element-guid"/&gt;
+    &lt;xs:element name="content-creation-timestamp" type="content-creation-timestamp"/&gt;
+    &lt;xs:element name="content-topic" type="content-topic"/&gt;
+    &lt;xs:element name="content-type" type="content-type"/&gt;
+    &lt;xs:element name="data-source" type="data-source" minOccurs="0"/&gt;
+    &lt;xs:element name="data-origin" type="data-origin" minOccurs="0"/&gt;
+    &lt;xs:element name="relationship" type="relationship" minOccurs="0" maxOccurs="unbounded"/&gt;
+    &lt;xs:element name="yang-output-metadata" type="yang-output-metadata" minOccurs="0"/&gt;
+  &lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+</pre>
+<h1 id="rfc.section.4.2">
+<a href="#rfc.section.4.2">4.2.</a> <a href="#definition-of-the-yang-output-metadata-element-included-in-content-metadata" id="definition-of-the-yang-output-metadata-element-included-in-content-metadata">Definition of the yang-output-metadata element included in content-metadata</a>
+</h1>
+<p id="rfc.section.4.2.p.1">The composition of metadata that can be associated with a XML NETCONF result depends on multiple factors:</p>
+<p></p>
+
+<ul>
+<li>acquisition method: query / subscription</li>
+<li>encoding: XML / JSON / CBOR</li>
+<li>subscription interval: periodic / on-change</li>
+<li>filter-type: xpath / subtree</li>
+</ul>
+<p id="rfc.section.4.2.p.3">Additionally, the actual filter expression (or in future iterations of this work a referencing label, such as a URI, UUID or other composed identifier) has to be included in the content-metadata.</p>
+<pre>
+&lt;xs:complexType name="yang-output-metadata"&gt;
+  &lt;xs:sequence&gt;
+    &lt;xs:choice maxOccurs="1"&gt;
+      &lt;xs:element name="yang-query" type="yang-query" /&gt;
+      &lt;xs:element name="yang-subscribe" type="yang-subscribe" /&gt;
+    &lt;/xs:choice&gt;
+    &lt;xs:element name="encoding" type="yang-encoding" /&gt;
+    &lt;xs:element name="module-names" type="module-name" minOccurs="0" maxOccurs="unbounded" /&gt;
+  &lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+
+&lt;xs:complexType name="yang-subscribe"&gt;
+  &lt;xs:restriction base="xs:NMTOKEN"&gt;
+    &lt;xs:enumeration value="periodic" /&gt;
+    &lt;xs:enumeration value="on-change" /&gt;
+  &lt;/xs:restriction&gt;
+  &lt;xs:restriction base="xs:NMTOKEN"&gt;
+    &lt;xs:enumeration value="xpath" /&gt;
+    &lt;xs:enumeration value="subtree" /&gt;
+  &lt;/xs:restriction&gt;
+&lt;xs:complexType&gt;
+
+&lt;xs:simpleType name="filter-expression"&gt;
+  &lt;xs:restriction base="xs:string" /&gt;
+&lt;/xs:simpleType&gt;
+
+&lt;xs:simpleType name="yang-query"&gt;
+  &lt;xs:restriction base="xs:string" /&gt;
+&lt;/xs:simpleType&gt;
+
+&lt;xs:simpleType name="yang-encoding"&gt;
+  &lt;xs:restriction base="xs:NMTOKEN"&gt;
+    &lt;xs:enumeration value="netconf" /&gt;
+    &lt;xs:enumeration value="restconf" /&gt;
+    &lt;xs:enumeration value="comi" /&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+
+&lt;xs:simpleType name="module-name"&gt;
+  &lt;xs:restriction base="xs:string" /&gt;
+&lt;/xs:simpleType&gt;
+</pre>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#sacm-component-composition" id="sacm-component-composition">SACM Component Composition</a>
+</h1>
+<p id="rfc.section.5.p.1">A SACM Component able to process YANG subscribed notifications requires at least two functions:</p>
+<p></p>
+
+<ul>
+<li>a YANG push client function <a href="#I-D.ietf-netconf-yang-push" class="xref">[I-D.ietf-netconf-yang-push]</a>, <a href="#I-D.ietf-netconf-subscribed-notifications" class="xref">[I-D.ietf-netconf-subscribed-notifications]</a>
+</li>
+<li>an xmpp-grid provider function <a href="#I-D.ietf-mile-xmpp-grid" class="xref">[I-D.ietf-mile-xmpp-grid]</a>
+</li>
+</ul>
+<p id="rfc.section.5.p.3">Orchestattion of functions inside a component, their discovery as capabiliites and the internal communication of SACM content inside a SACM component is out of scope of this document for now.</p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#iana-considerations" id="iana-considerations">IANA considerations</a>
+</h1>
+<p id="rfc.section.6.p.1">This document includes requests to IANA.</p>
+<h1 id="rfc.section.7">
+<a href="#rfc.section.7">7.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
+</h1>
+<p id="rfc.section.7.p.1">TBD</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
+</h1>
+<p id="rfc.section.8.p.1">Christoph Vigano, Guangying Zheng, Eric Voit, Alexander Clemm</p>
+<h1 id="rfc.section.9">
+<a href="#rfc.section.9">9.</a> <a href="#change-log" id="change-log">Change Log</a>
+</h1>
+<p id="rfc.section.9.p.1">First version -00</p>
+<h1 id="rfc.section.10">
+<a href="#rfc.section.10">10.</a> <a href="#contributors" id="contributors">Contributors</a>
+</h1>
+<h1 id="rfc.references">
+<a href="#rfc.references">11.</a> Normative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="I-D.ietf-mile-xmpp-grid">[I-D.ietf-mile-xmpp-grid]</b></td>
+<td class="top">
+<a>Cam-Winget, N.</a>, <a>Appala, S.</a> and <a>S. Pope</a>, "<a href="http://tools.ietf.org/html/draft-ietf-mile-xmpp-grid-03">Using XMPP Protocol and its Extensions for Use with IODEF</a>", Internet-Draft draft-ietf-mile-xmpp-grid-03, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-netconf-subscribed-notifications">[I-D.ietf-netconf-subscribed-notifications]</b></td>
+<td class="top">
+<a>Voit, E.</a>, <a>Clemm, A.</a>, <a>Prieto, A.</a>, <a>Nilsen-Nygaard, E.</a> and <a>A. Tripathy</a>, "<a href="http://tools.ietf.org/html/draft-ietf-netconf-subscribed-notifications-03">Custom Subscription to Event Notifications</a>", Internet-Draft draft-ietf-netconf-subscribed-notifications-03, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-netconf-yang-push">[I-D.ietf-netconf-yang-push]</b></td>
+<td class="top">
+<a>Clemm, A.</a>, <a>Voit, E.</a>, <a>Prieto, A.</a>, <a>Tripathy, A.</a>, <a>Nilsen-Nygaard, E.</a>, <a>Bierman, A.</a> and <a>B. Lengyel</a>, "<a href="http://tools.ietf.org/html/draft-ietf-netconf-yang-push-07">Subscribing to YANG datastore push updates</a>", Internet-Draft draft-ietf-netconf-yang-push-07, June 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-sacm-information-model">[I-D.ietf-sacm-information-model]</b></td>
+<td class="top">
+<a>Waltermire, D.</a>, <a>Watson, K.</a>, <a>Kahn, C.</a>, <a>Lorenzin, L.</a>, <a>Cokus, M.</a>, <a>Haynes, D.</a> and <a>H. Birkholz</a>, "<a href="http://tools.ietf.org/html/draft-ietf-sacm-information-model-10">SACM Information Model</a>", Internet-Draft draft-ietf-sacm-information-model-10, April 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2119">[RFC2119]</b></td>
+<td class="top">
+<a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.appendix.A">
+<a href="#rfc.appendix.A">Appendix A.</a> <a href="#minimal-sacm-statement-definition-for-yang-output" id="minimal-sacm-statement-definition-for-yang-output">Minimal SACM Statement Definition for YANG Output</a>
+</h1>
+<p id="rfc.section.A.p.1">The definitions of statements, statement-metadata, content-element, and content-metadata are provided by the SACM Information Model <a href="#I-D.ietf-sacm-information-model" class="xref">[I-D.ietf-sacm-information-model]</a>.</p>
+<p id="rfc.section.A.p.2">Due to the stripping down of content-elements to YANG output, the enumerations still included in the relationship type are not able to point to other content actually.</p>
+<pre>
+TBD
+</pre>
+<h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Henk Birkholz</span> 
+	  <span class="n hidden">
+		<span class="family-name">Birkholz</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Fraunhofer SIT</span>
+	<span class="adr">
+	  <span class="vcardline">Rheinstrasse 75</span>
+
+	  <span class="vcardline">
+		<span class="locality">Darmstadt</span>,  
+		<span class="region"></span>
+		<span class="code">64295</span>
+	  </span>
+	  <span class="country-name vcardline">Germany</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:henk.birkholz@sit.fraunhofer.de">henk.birkholz@sit.fraunhofer.de</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Nancy Cam-Winget</span> 
+	  <span class="n hidden">
+		<span class="family-name">Cam-Winget</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Cisco Systems</span>
+	<span class="adr">
+	  <span class="vcardline">3550 Cisco Way</span>
+
+	  <span class="vcardline">
+		<span class="locality">San Jose</span>,  
+		<span class="region">CA</span> 
+		<span class="code">95134</span>
+	  </span>
+	  <span class="country-name vcardline">USA</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:ncamwing@cisco.com">ncamwing@cisco.com</a></span>
+
+  </address>
+</div>
+
+  <div class="github-fork-ribbon-wrapper"><div class="github-fork-ribbon"><a href="https://github.com/henkbirkholz/draft-birkholz-sacm-yang-content">Fork me on GitHub</a></div></div>
+</body>
+</html>
