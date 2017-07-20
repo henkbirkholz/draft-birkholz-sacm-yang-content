@@ -109,6 +109,7 @@ YANG output that is SACM content is represented as an element defintion included
 choice of the content-element.
 
 ~~~~ XSD
+<CODE BEGINS>
 <xs:complexType name="content-element">
   <xs:sequence>
     <xs:element name="content-metadata" type="content-metadata" maxOccurs="unbounded"/>
@@ -119,6 +120,8 @@ choice of the content-element.
     </xs:choice>
   </xs:sequence>
 </xs:complexType>
+<CODE ENDS>
+~~~~
 
 ## Enumeration definition for content-type
 
@@ -131,6 +134,7 @@ Information Model. For the scope of this document, the list of potential content
 "yang-output" only.
 
 ~~~~ XSD
+<CODE BEGINS>
 <xs:simpleType name="content-type">
   <xs:restriction base="xs:string">
     <xs:enumeration value="yang-output" />
@@ -138,6 +142,7 @@ Information Model. For the scope of this document, the list of potential content
             will go here, i.e. data models, such as OVAL, SCAP, SWID, etc. -->
   </xs:restriction>
 </xs:simpleType>
+<CODE ENDS>
 ~~~~
 
 ## Element definition for content-metadata
@@ -151,6 +156,7 @@ yang-output element has to be included in the content-metadata element.
 The general content-metadata elements are illustrated in the Appendix A.
 
 ~~~~ XSD
+<CODE BEGINS>
 <xs:complexType name="content-metadata">
   <xs:sequence>
     <xs:element name="content-element-guid" type="content-element-guid"/>
@@ -163,6 +169,7 @@ The general content-metadata elements are illustrated in the Appendix A.
     <xs:element name="yang-output-metadata" type="yang-output-metadata" minOccurs="0"/>
   </xs:sequence>
 </xs:complexType>
+<CODE ENDS>
 ~~~~
 
 ## Definition of the yang-output-metadata element included in content-metadata
@@ -178,6 +185,7 @@ factors:
 Additionally, the actual filter expression (or in future iterations of this work a referencing label, such as a URI, UUID or other composed identifier) has to be included in the content-metadata.
 
 ~~~~ XSD
+<CODE BEGINS>
 <xs:complexType name="yang-output-metadata">
   <xs:sequence>
     <xs:choice maxOccurs="1">
@@ -219,6 +227,7 @@ Additionally, the actual filter expression (or in future iterations of this work
 <xs:simpleType name="module-name">
   <xs:restriction base="xs:string" />
 </xs:simpleType>
+<CODE ENDS>
 ~~~~
 
 # SACM Component Composition
@@ -259,5 +268,7 @@ Due to the stripping down of content-elements to YANG output, the enumerations s
 relationship type are not able to point to other content actually.
 
 ~~~~ XSD
-TBD
+<CODE BEGINS>
+{::include partial-poc-sacm-data-model.xsd}
+<CODE ENDS>
 ~~~~
