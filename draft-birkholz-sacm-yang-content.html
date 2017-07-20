@@ -279,8 +279,9 @@ address {
 <link href="#rfc.section.2" rel="Chapter" title="2 Requirements notation">
 <link href="#rfc.section.3" rel="Chapter" title="3 Brokering of YANG push telemetry via SACM statements">
 <link href="#rfc.section.4" rel="Chapter" title="4 Encapsulation of YANG notifications in SACM content-elements">
-<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Element definition for content-metadata">
-<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Definition of the yang-output-metadata element included in content-metadata">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Enumeration definition for content-type">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Element definition for content-metadata">
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Definition of the yang-output-metadata element included in content-metadata">
 <link href="#rfc.section.5" rel="Chapter" title="5 SACM Component Composition">
 <link href="#rfc.section.6" rel="Chapter" title="6 IANA considerations">
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
@@ -360,9 +361,11 @@ address {
 </li>
 <li>4.   <a href="#rfc.section.4">Encapsulation of YANG notifications in SACM content-elements</a>
 </li>
-<ul><li>4.1.   <a href="#rfc.section.4.1">Element definition for content-metadata</a>
+<ul><li>4.1.   <a href="#rfc.section.4.1">Enumeration definition for content-type</a>
 </li>
-<li>4.2.   <a href="#rfc.section.4.2">Definition of the yang-output-metadata element included in content-metadata</a>
+<li>4.2.   <a href="#rfc.section.4.2">Element definition for content-metadata</a>
+</li>
+<li>4.3.   <a href="#rfc.section.4.3">Definition of the yang-output-metadata element included in content-metadata</a>
 </li>
 </ul><li>5.   <a href="#rfc.section.5">SACM Component Composition</a>
 </li>
@@ -412,6 +415,7 @@ address {
 <p id="rfc.section.4.p.1">A YANG notification is associated with a set of YANG specific metadata. Hence, a YANG notification published to a SACM Domain MUST be encapsulated with its corresponding metadata in a Content Element as defined below.</p>
 <p id="rfc.section.4.p.2">YANG output that is SACM content is represented as an element defintion included in the content choice of the content-element.</p>
 <pre>
+&lt;CODE BEGINS&gt;
 &lt;xs:complexType name="content-element"&gt;
   &lt;xs:sequence&gt;
     &lt;xs:element name="content-metadata" type="content-metadata" maxOccurs="unbounded"/&gt;
@@ -422,18 +426,15 @@ address {
     &lt;/xs:choice&gt;
   &lt;/xs:sequence&gt;
 &lt;/xs:complexType&gt;
-
-## Enumeration definition for content-type
-
-One occurrence of the yang-output element MUST be instantiated in the content-metadata element if
-YANG push output is to be transferred. Also, the content-type must be set to the enumeration value
-"yang-output", respectively.
-
-In general, the list of content-type enumerations is including every subject as defined in the SACM
-Information Model. For the scope of this document, the list of potential content is reduced to
-"yang-output" only.
-
-~~~~ XSD
+&lt;CODE ENDS&gt;
+</pre>
+<h1 id="rfc.section.4.1">
+<a href="#rfc.section.4.1">4.1.</a> <a href="#enumeration-definition-for-content-type" id="enumeration-definition-for-content-type">Enumeration definition for content-type</a>
+</h1>
+<p id="rfc.section.4.1.p.1">One occurrence of the yang-output element MUST be instantiated in the content-metadata element if YANG push output is to be transferred. Also, the content-type must be set to the enumeration value "yang-output", respectively.</p>
+<p id="rfc.section.4.1.p.2">In general, the list of content-type enumerations is including every subject as defined in the SACM Information Model. For the scope of this document, the list of potential content is reduced to "yang-output" only.</p>
+<pre>
+&lt;CODE BEGINS&gt;
 &lt;xs:simpleType name="content-type"&gt;
   &lt;xs:restriction base="xs:string"&gt;
     &lt;xs:enumeration value="yang-output" /&gt;
@@ -441,13 +442,15 @@ Information Model. For the scope of this document, the list of potential content
             will go here, i.e. data models, such as OVAL, SCAP, SWID, etc. --&gt;
   &lt;/xs:restriction&gt;
 &lt;/xs:simpleType&gt;
+&lt;CODE ENDS&gt;
 </pre>
-<h1 id="rfc.section.4.1">
-<a href="#rfc.section.4.1">4.1.</a> <a href="#element-definition-for-content-metadata" id="element-definition-for-content-metadata">Element definition for content-metadata</a>
+<h1 id="rfc.section.4.2">
+<a href="#rfc.section.4.2">4.2.</a> <a href="#element-definition-for-content-metadata" id="element-definition-for-content-metadata">Element definition for content-metadata</a>
 </h1>
-<p id="rfc.section.4.1.p.1">The list of optional elements included in content-metadata will incorporate any every potential metadata type. For the scope of this document, the list of elements is also limited to the minimal required set of metadata elements and the yang-output metadata element to support the encapsulation of NETCONF subscribed notifications and YANG query result. As defined above, one occurrence of the yang-output element has to be included in the content-metadata element.</p>
-<p id="rfc.section.4.1.p.2">The general content-metadata elements are illustrated in the Appendix A.</p>
+<p id="rfc.section.4.2.p.1">The list of optional elements included in content-metadata will incorporate any every potential metadata type. For the scope of this document, the list of elements is also limited to the minimal required set of metadata elements and the yang-output metadata element to support the encapsulation of NETCONF subscribed notifications and YANG query result. As defined above, one occurrence of the yang-output element has to be included in the content-metadata element.</p>
+<p id="rfc.section.4.2.p.2">The general content-metadata elements are illustrated in the Appendix A.</p>
 <pre>
+&lt;CODE BEGINS&gt;
 &lt;xs:complexType name="content-metadata"&gt;
   &lt;xs:sequence&gt;
     &lt;xs:element name="content-element-guid" type="content-element-guid"/&gt;
@@ -460,11 +463,12 @@ Information Model. For the scope of this document, the list of potential content
     &lt;xs:element name="yang-output-metadata" type="yang-output-metadata" minOccurs="0"/&gt;
   &lt;/xs:sequence&gt;
 &lt;/xs:complexType&gt;
+&lt;CODE ENDS&gt;
 </pre>
-<h1 id="rfc.section.4.2">
-<a href="#rfc.section.4.2">4.2.</a> <a href="#definition-of-the-yang-output-metadata-element-included-in-content-metadata" id="definition-of-the-yang-output-metadata-element-included-in-content-metadata">Definition of the yang-output-metadata element included in content-metadata</a>
+<h1 id="rfc.section.4.3">
+<a href="#rfc.section.4.3">4.3.</a> <a href="#definition-of-the-yang-output-metadata-element-included-in-content-metadata" id="definition-of-the-yang-output-metadata-element-included-in-content-metadata">Definition of the yang-output-metadata element included in content-metadata</a>
 </h1>
-<p id="rfc.section.4.2.p.1">The composition of metadata that can be associated with a XML NETCONF result depends on multiple factors:</p>
+<p id="rfc.section.4.3.p.1">The composition of metadata that can be associated with a XML NETCONF result depends on multiple factors:</p>
 <p></p>
 
 <ul>
@@ -473,8 +477,9 @@ Information Model. For the scope of this document, the list of potential content
 <li>subscription interval: periodic / on-change</li>
 <li>filter-type: xpath / subtree</li>
 </ul>
-<p id="rfc.section.4.2.p.3">Additionally, the actual filter expression (or in future iterations of this work a referencing label, such as a URI, UUID or other composed identifier) has to be included in the content-metadata.</p>
+<p id="rfc.section.4.3.p.3">Additionally, the actual filter expression (or in future iterations of this work a referencing label, such as a URI, UUID or other composed identifier) has to be included in the content-metadata.</p>
 <pre>
+&lt;CODE BEGINS&gt;
 &lt;xs:complexType name="yang-output-metadata"&gt;
   &lt;xs:sequence&gt;
     &lt;xs:choice maxOccurs="1"&gt;
@@ -516,6 +521,7 @@ Information Model. For the scope of this document, the list of potential content
 &lt;xs:simpleType name="module-name"&gt;
   &lt;xs:restriction base="xs:string" /&gt;
 &lt;/xs:simpleType&gt;
+&lt;CODE ENDS&gt;
 </pre>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#sacm-component-composition" id="sacm-component-composition">SACM Component Composition</a>
@@ -584,7 +590,936 @@ Information Model. For the scope of this document, the list of potential content
 <p id="rfc.section.A.p.1">The definitions of statements, statement-metadata, content-element, and content-metadata are provided by the SACM Information Model <a href="#I-D.ietf-sacm-information-model" class="xref">[I-D.ietf-sacm-information-model]</a>.</p>
 <p id="rfc.section.A.p.2">Due to the stripping down of content-elements to YANG output, the enumerations still included in the relationship type are not able to point to other content actually.</p>
 <pre>
-TBD
+&lt;CODE BEGINS&gt;
+&lt;?xml version="1.0"?&gt;
+&lt;xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"&gt;
+
+  &lt;xs:complexType name="StatementMetadata"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="statement-guid" type="statement-guid" /&gt;
+      &lt;xs:element name="data-origin" type="data-origin" /&gt;
+      &lt;xs:element name="statement-creation-timestamp" type="statement-creation-timestamp" minOccurs="0" /&gt;
+      &lt;xs:element name="statement-publish-timestamp" type="statement-creation-timestamp" /&gt;
+      &lt;xs:element name="statement-type" type="statement-type" /&gt;
+      &lt;xs:element name="content-elements" type="content-elements" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="sacm-statement"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="statement-metadata" type="StatementMetadata" /&gt;
+      &lt;xs:element name="content-element" type="content-element" minOccurs="1" maxOccurs="unbounded" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:element name="sacm-statement" type="sacm-statement"&gt;
+  &lt;/xs:element&gt;
+
+  &lt;xs:simpleType name="statement-guid"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="decimal-fraction-denominator"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="decimal-fraction-numerator"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="content-elements"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:complexType name="statement-creation-timestamp"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="decimal-fraction-denominator" type="decimal-fraction-denominator"/&gt;
+      &lt;xs:element name="decimal-fraction-numerator" type="decimal-fraction-numerator"/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="content-creation-timestamp"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="decimal-fraction-denominator" type="decimal-fraction-denominator"/&gt;
+      &lt;xs:element name="decimal-fraction-numerator" type="decimal-fraction-numerator"/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:simpleType name="statement-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="Observation" /&gt;
+      &lt;xs:enumeration value="DirectoryContent" /&gt;
+      &lt;xs:enumeration value="Correlation" /&gt;
+      &lt;xs:enumeration value="Assessment" /&gt;
+      &lt;xs:enumeration value="Guidance" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="content-topic"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="Session" /&gt;
+      &lt;xs:enumeration value="User" /&gt;
+      &lt;xs:enumeration value="Interface" /&gt;
+      &lt;xs:enumeration value="PostureProfile" /&gt;
+      &lt;xs:enumeration value="Flow" /&gt;
+      &lt;xs:enumeration value="PostureAssessment" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="content-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="EndpointConfiguration" /&gt;
+      &lt;xs:enumeration value="EndpointState" /&gt;
+      &lt;xs:enumeration value="DirectoryEntry" /&gt;
+      &lt;xs:enumeration value="Event" /&gt;
+      &lt;xs:enumeration value="Incident" /&gt;
+      &lt;xs:enumeration value="yang-output" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="content-element-guid"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="yang-output-metadata"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:choice maxOccurs="1"&gt;
+        &lt;xs:element name="yang-query" type="yang-query" /&gt;
+        &lt;xs:element name="yang-subscribe" type="yang-subscribe" /&gt;
+      &lt;/xs:choice&gt;
+      &lt;xs:element name="encoding" type="yang-encoding" /&gt;
+      &lt;xs:element name="module-names" type="module-name" minOccurs="0" maxOccurs="unbounded" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="yang-subscribe"&gt;
+    &lt;xs:restriction base="xs:NMTOKEN"&gt;
+      &lt;xs:enumeration value="periodic" /&gt;
+      &lt;xs:enumeration value="on-change" /&gt;
+    &lt;/xs:restriction&gt;
+    &lt;xs:restriction base="xs:NMTOKEN"&gt;
+      &lt;xs:enumeration value="xpath" /&gt;
+      &lt;xs:enumeration value="subtree" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="filter-expression"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="yang-query"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="yang-encoding"&gt;
+    &lt;xs:restriction base="xs:NMTOKEN"&gt;
+      &lt;xs:enumeration value="netconf" /&gt;
+      &lt;xs:enumeration value="restconf" /&gt;
+      &lt;xs:enumeration value="comi" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="module-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="relationship-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="associated_with_user" /&gt;
+      &lt;xs:enumeration value="applies_to_session" /&gt;
+      &lt;xs:enumeration value="seen_on_interface" /&gt;
+      &lt;xs:enumeration value="associated_with_flow" /&gt;
+      &lt;xs:enumeration value="contains_virtual_device" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="relationship-content-element-guid"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="relationship-statement-guid"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="relationship-object-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="data-source-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="data-origin"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="host-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="administrative-domain-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="sub-administrative-domain"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="super-administrative-domain"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;  
+  
+  &lt;xs:complexType name="relationship"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="relationship-type" type="relationship-type" /&gt;
+      &lt;xs:element name="relationship-content-element-guid" type="relationship-content-element-guid" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="relationship-statement-guid" type="relationship-statement-guid" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="relationship-object-label" type="relationship-object-label" minOccurs="0" maxOccurs="unbounded" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="flow-element"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="network-address" type="network-address"/&gt;
+      &lt;xs:element name="layer4-port-address" type="layer4-port-address" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="flow-record"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="src-flow-element" type="flow-element" /&gt;
+      &lt;xs:element name="dst-flow-element" type="flow-element" /&gt;
+      &lt;xs:element name="protocol" type="protocol" /&gt;
+      &lt;xs:element name="layer4-protocol" type="layer4-protocol" /&gt;
+      &lt;xs:element name="flow-statistics" type="flow-statistics" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="content-metadata"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="content-element-guid" type="content-element-guid" /&gt;
+      &lt;xs:element name="content-creation-timestamp" type="content-creation-timestamp" /&gt;
+      &lt;xs:element name="content-topic" type="content-topic" /&gt;
+      &lt;xs:element name="content-type" type="content-type" /&gt;
+      &lt;xs:element name="data-source" type="data-source" minOccurs="0" /&gt;
+      &lt;xs:element name="data-origin" type="data-origin" minOccurs="0" /&gt;
+      &lt;xs:element name="relationship" type="relationship" minOccurs="0" maxOccurs="unbounded"/&gt;
+      &lt;xs:element name="yang-output-metadata" type="yang-output-metadata" minOccurs="0"/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="content-element"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="content-metadata" type="content-metadata" maxOccurs="unbounded"/&gt;
+      &lt;xs:choice maxOccurs="unbounded"&gt;
+        &lt;xs:element name="yang-output" type="yang-output" /&gt;
+        &lt;xs:element name="flow" type="flow-record" /&gt;
+        &lt;xs:element name="posture" type="xs:string" /&gt;
+        &lt;xs:element name="user" type="user" /&gt;
+        &lt;xs:element name="session" type="session" /&gt;
+        &lt;xs:element name="ethernet-interface" type="ethernet-interface" /&gt;
+        &lt;xs:element name="target-endpoint" type="target-endpoint" /&gt;
+        &lt;xs:element name="port" type="port" /&gt;
+        &lt;xs:element name="posture-assessment" type="posture-assessment" /&gt;
+      &lt;/xs:choice&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="posture-assessment"&gt;&lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="target-endpoint"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="host-name" type="host-name" /&gt;
+      &lt;xs:element name="te-label" type="te-label" /&gt;
+      &lt;xs:element name="administrative-domain" type="administrative-domain" minOccurs="0" /&gt;
+      &lt;xs:element name="application-instance" type="application-instance" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="ethernet-interface" type="ethernet-interface" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="address-association" type="address-association" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="data-source" type="data-source" minOccurs="0" /&gt;
+      &lt;xs:element name="operating-system" type="operating-system" minOccurs="0" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:simpleType name="te-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:complexType name="application-instance"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="application-label" type="application-label" /&gt;
+      &lt;xs:element name="target-endpoint" type="target-endpoint" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="attribute-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="attribute-value"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:complexType name="attribute-value-pair"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="attribute-name" type="attribute-name" /&gt;
+      &lt;xs:element name="attribute-value" type="attribute-value" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;    
+  
+  &lt;xs:simpleType name="application-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="application-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="application-version"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="application-manufacturer"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;!--     TODO: is it possible to declare this as an enumeration or is that unrealistic? --&gt;
+  &lt;xs:simpleType name="application-type"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="application-component"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  
+  
+  &lt;xs:complexType name="application"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="application-label" type="application-label" minOccurs="0" /&gt;
+      &lt;xs:element name="application-name" type="application-name" /&gt;
+      &lt;xs:element name="application-type" type="application-type" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="application-component" type="application-component" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="application-manufacturer" type="application-manufacturer" minOccurs="0" /&gt;
+      &lt;xs:element name="application-version" type="application-version" minOccurs="0" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="address-association"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="address" type="address" /&gt;
+      &lt;xs:element name="address-association-type" type="address-association-type" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="address"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="address-mask-value" type="address-mask-value" /&gt;
+      &lt;xs:element name="address-type" type="address-type" /&gt;
+      &lt;xs:element name="address-value" type="address-value" /&gt;          
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:simpleType name="address-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="Ethernet" /&gt;
+      &lt;xs:enumeration value="ZigBee" /&gt;
+      &lt;xs:enumeration value="ModBus" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="session-state-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="Authenticating"&gt;&lt;/xs:enumeration&gt;
+      &lt;xs:enumeration value="Authenticated"&gt;&lt;/xs:enumeration&gt;
+      &lt;xs:enumeration value="Postured"&gt;&lt;/xs:enumeration&gt;
+      &lt;xs:enumeration value="Started"&gt;&lt;/xs:enumeration&gt;
+      &lt;xs:enumeration value="Disconnected"&gt;&lt;/xs:enumeration&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:complexType name="session"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="session-state-type" type="session-state-type" /&gt;
+      &lt;!-- TODO: add additional elements for Session Type --&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:simpleType name="user-id"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="username"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="user-directory"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:complexType name="user"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="user-id" type="user-id" /&gt;
+      &lt;xs:element name="username" type="username" minOccurs="0" /&gt;
+      &lt;xs:element name="data-source" type="data-source" minOccurs="0" /&gt;
+      &lt;xs:element name="user-directory" type="user-directory" minOccurs="0" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="ethernet-interface"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="interface-label" type="interface-label" /&gt;
+      &lt;xs:element name="network-interface-name" type="network-interface-name" minOccurs="0"/&gt;
+      &lt;xs:element name="mac-address" type="mac-address" /&gt;
+      &lt;xs:element name="network-name" type="network-name" minOccurs="0"/&gt;
+      &lt;xs:element name="network-id" type="network-id" minOccurs="0"/&gt;
+      &lt;xs:element name="layer2-interface-type" type="layer2-interface-type" minOccurs="0"/&gt;
+      &lt;xs:element name="sub-interface-label" type="sub-interface-label" minOccurs="0" maxOccurs="unbounded"/&gt;
+      &lt;xs:element name="super-interface-label" type="super-interface-label" minOccurs="0" maxOccurs="unbounded"/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="event-type"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="event-threshold"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="event-threshold-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="event-trigger"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="timestamp-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="discovered" /&gt;
+      &lt;xs:enumeration value="classified" /&gt;
+      &lt;xs:enumeration value="collected" /&gt;
+      &lt;xs:enumeration value="published" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="typed-timestamp"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="decimal-fraction-denominator" type="decimal-fraction-denominator"/&gt;
+      &lt;xs:element name="decimal-fraction-numerator" type="decimal-fraction-numerator"/&gt;
+      &lt;xs:element name="timestamp-type" type="timestamp-type" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="event"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="event-type" type="event-type" minOccurs="0" /&gt;
+      &lt;xs:element name="event-threshold" type="event-threshold" minOccurs="0" /&gt;
+      &lt;xs:element name="event-threshold-name" type="event-threshold-name" minOccurs="0" /&gt;
+      &lt;xs:element name="event-trigger" type="event-trigger" minOccurs="0" /&gt;
+      &lt;xs:element name="typed-timestamp" type="typed-timestamp" /&gt;
+      &lt;xs:element name="content" type="xs:anySimpleType" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="os-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="os-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="os-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="real-time" /&gt;
+      &lt;xs:enumeration value="consumer" /&gt;
+      &lt;xs:enumeration value="server" /&gt;
+      &lt;xs:enumeration value="security-enhanced" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;  
+  
+  &lt;xs:simpleType name="os-component"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="os-manufacturer"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="os-version"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:complexType name="operating-system"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="os-label" type="os-label" minOccurs="0" /&gt;
+      &lt;xs:element name="os-name" type="os-name" /&gt;
+      &lt;xs:element name="os-type" type="os-type" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="os-component" type="os-component" minOccurs="0" maxOccurs="unbounded"/&gt;
+      &lt;xs:element name="os-manufacturer" type="os-manufacturer" minOccurs="0" /&gt;
+      &lt;xs:element name="os-version" type="os-version" minOccurs="0" /&gt;      
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;  
+  
+  &lt;xs:simpleType name="sub-interface-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="super-interface-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="address-association-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="broadcast-domain-member-list" /&gt;
+      &lt;xs:enumeration value="ip-subnet-member-list" /&gt;
+      &lt;xs:enumeration value="ip-mac" /&gt;
+      &lt;xs:enumeration value="shared-backhaul-interface" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="address-mask-value"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:simpleType name="address-value"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="interface-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="network-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="network-id"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="network-interface-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="layer2-interface-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="fastEther" /&gt;
+      &lt;xs:enumeration value="fastEtherFX" /&gt;
+      &lt;xs:enumeration value="gigabitEthernet" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="ipv6-address-subnet-mask-cidrnot"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:simpleType name="ipv6-address-value"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  
+  &lt;xs:simpleType name="ipv4-address-subnet-mask-cidrnot"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:simpleType name="ipv4-address-subnet-mask"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:simpleType name="ipv4-address-value"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="network-address"&gt;
+    &lt;xs:choice&gt;
+      &lt;xs:element name="ipv4-address" type="ipv4-address" /&gt;
+      &lt;xs:element name="ipv6-address" type="ipv6-address" /&gt;
+      &lt;xs:element name="mac-address" type="mac-address" /&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="endpoint-identifier"&gt;
+    &lt;xs:choice&gt;
+      &lt;xs:element name="certificate" type="certificate" /&gt;
+      &lt;xs:element name="firmware-id" type="firmware-id" /&gt;
+      &lt;xs:element name="hardware-serial-number" type="hardware-serial-number" /&gt;
+      &lt;xs:element name="host-name" type="host-name" /&gt;
+      &lt;xs:element name="ipv4-address-value" type="ipv4-address-value" /&gt;
+      &lt;xs:element name="ipv6-address-value" type="ipv6-address-value" /&gt;
+      &lt;xs:element name="mac-address" type="mac-address" /&gt;
+      &lt;xs:element name="public-key" type="public-key" /&gt;
+      &lt;xs:element name="username" type="username" /&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;  
+
+  &lt;xs:complexType name="ipv4-address"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="ipv4-address-value" type="ipv4-address-value" /&gt;
+      &lt;xs:element name="ipv4-address-subnet-mask-cidrnot" type="ipv4-address-subnet-mask-cidrnot"/&gt;
+      &lt;xs:element name="ipv4-address-subnet-mask" type="ipv4-address-subnet-mask"/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="ipv6-address"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="ipv6-address-value" type="ipv6-address-value" /&gt;
+      &lt;xs:element name="ipv6-address-subnet-mask-cidrnot" type="ipv6-address-subnet-mask-cidrnot"/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="mac-address"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="layer4-port-address"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="protocol"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="layer4-protocol"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="bytes-received"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="bytes-sent"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="units-received"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="units-sent"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;
+  &lt;/xs:simpleType&gt;    
+  
+  &lt;xs:complexType name="flow-statistics"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="bytes-received" type="bytes-received" /&gt;
+      &lt;xs:element name="bytes-sent" type="bytes-sent" /&gt;
+      &lt;xs:element name="units-received" type="units-received" /&gt;
+      &lt;xs:element name="units-sent" type="units-sent" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="person"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="person-first-name" type="person-first-name" /&gt;
+      &lt;xs:element name="person-last-name" type="person-last-name" /&gt;
+      &lt;xs:element name="person-middle-name" type="person-middle-name" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="phone-contact" type="phone-contact" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="email-address" type="email-address" minOccurs="0" maxOccurs="unbounded" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="person-first-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="person-last-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="person-middle-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="email-address"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="phone-contact"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="phone-number" type="phone-number" /&gt;
+      &lt;xs:element name="phone-number-type" type="phone-number-type" minOccurs="0" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="phone-number"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="phone-number-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="DSN" /&gt;
+      &lt;xs:enumeration value="Fax" /&gt;
+      &lt;xs:enumeration value="Home" /&gt;
+      &lt;xs:enumeration value="Mobile" /&gt;
+      &lt;xs:enumeration value="Pager" /&gt;
+      &lt;xs:enumeration value="Secure" /&gt;
+      &lt;xs:enumeration value="Unsecure" /&gt;
+      &lt;xs:enumeration value="Work" /&gt;
+      &lt;xs:enumeration value="Other" /&gt; 
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="privilege"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="privilege-name" type="privilege-name" /&gt;
+      &lt;xs:element name="privilege-value" type="privilege-value" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="privilege-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="privilege-value"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:complexType name="location"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="WGS84-longitude" type="WGS84-longitude" /&gt;
+      &lt;xs:element name="WGS84-latitude" type="WGS84-latitude" /&gt;
+      &lt;xs:element name="WGS84-altitude" type="WGS84-altitude" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="WGS84-longitude"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="WGS84-latitude"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="WGS84-altitude"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="organization-id"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;  
+
+  &lt;xs:simpleType name="organization-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;  
+  
+  &lt;xs:complexType name="organization"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="organization-id" type="organization-id" /&gt;
+      &lt;xs:element name="organization-name" type="organization-name" /&gt;
+      &lt;xs:element name="location" type="location" minOccurs="0" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="data-source"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="data-source-label" type="data-source-label" minOccurs="0" /&gt;
+      &lt;xs:element name="endpoint-identifier" type="endpoint-identifier" minOccurs="0" maxOccurs="unbounded" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="administrative-domain"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="administrative-domain-label" type="administrative-domain-label" /&gt;
+      &lt;xs:element name="sub-administrative-domain" type="sub-administrative-domain" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;xs:element name="super-administrative-domain" type="super-administrative-domain" minOccurs="0" /&gt;
+      &lt;xs:element name="location" type="location" minOccurs="0" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:simpleType name="access-privilege-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="read" /&gt;
+      &lt;xs:enumeration value="write" /&gt;
+      &lt;xs:enumeration value="none" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="account-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="authenticator"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="authentication-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;!-- To be done --&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="birthdate"&gt;
+    &lt;xs:restriction base="xs:date" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="certificate"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="collection-task-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="network-observation" /&gt;
+      &lt;xs:enumeration value="remote-acquisition" /&gt;
+      &lt;xs:enumeration value="self-reported" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="confidence"&gt;
+    &lt;xs:restriction base="xs:float"&gt;
+      &lt;xs:minInclusive value="0" /&gt;
+      &lt;xs:maxInclusive value="1" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="content-action"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="add" /&gt;
+      &lt;xs:enumeration value="delete" /&gt;
+      &lt;xs:enumeration value="update" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="country-code"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="default-depth"&gt;
+    &lt;xs:restriction base="xs:integer" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="discoverer"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="firmware-id"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="hardware-serial-number"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="location-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="method-label"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+ 
+  &lt;xs:simpleType name="method-repository"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="network-access-level-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="block" /&gt;
+      &lt;xs:enumeration value="quarantine" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="patch-id"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="patch-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;!-- FIXME: is this type appropriate? --&gt;
+  &lt;xs:simpleType name="public-key"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="role-name"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="status"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="true" /&gt;
+      &lt;xs:enumeration value="false" /&gt;
+      &lt;xs:enumeration value="error" /&gt;
+      &lt;xs:enumeration value="unknown" /&gt;
+      &lt;xs:enumeration value="not applicable" /&gt;
+      &lt;xs:enumeration value="not evaluated" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="te-assessment-state"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="in-discovery" /&gt;
+      &lt;xs:enumeration value="discovered" /&gt;
+      &lt;xs:enumeration value="in-classification" /&gt;
+      &lt;xs:enumeration value="classified" /&gt;
+      &lt;xs:enumeration value="in-assessment" /&gt;
+      &lt;xs:enumeration value="assessed" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="timestamp"&gt;
+    &lt;xs:restriction base="xs:dateTime" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="web-site"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="port-id"&gt;
+    &lt;xs:restriction base="xs:string" /&gt;  
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="atm-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="lowSpeed" /&gt;
+      &lt;xs:enumeration value="highSpeed" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="enet-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="enet" /&gt;
+      &lt;xs:enumeration value="1genet" /&gt;
+      &lt;xs:enumeration value="10genet" /&gt;
+      &lt;xs:enumeration value="100genet" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="wifi-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="11n" /&gt;
+      &lt;xs:enumeration value="11a" /&gt;
+      &lt;xs:enumeration value="11gb" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+
+  &lt;xs:simpleType name="virtual-type"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="virtual-1g" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;  
+
+  &lt;xs:complexType name="port"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="port-id" type="port-id"/&gt;
+      &lt;xs:element name="atm-type" type="atm-type" maxOccurs="1" minOccurs="0" /&gt;
+      &lt;xs:element name="enet-type" type="enet-type" maxOccurs="1" minOccurs="0" /&gt;
+      &lt;xs:element name="wifi-type" type="wifi-type" maxOccurs="1" minOccurs="0" /&gt;
+      &lt;xs:element name="virtual-type" type="virtual-type" maxOccurs="1" minOccurs="0" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+
+  &lt;xs:complexType name="user-account"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="user" type="user"/&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:schema&gt;
+&lt;CODE ENDS&gt;
 </pre>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
