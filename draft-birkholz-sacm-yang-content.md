@@ -274,7 +274,7 @@ has to be included in the content-metadata.
 
 # Mapping of YANG Bundled Notifications to SACM Metadata
 
-{{-yanghead}} include the following definition:
+{{-yanghead}} includes the following definition:
 
 ~~~~
 
@@ -297,7 +297,7 @@ has to be included in the content-metadata.
              +-- receiver-record-contents?
 ~~~~
 
-The following mapping MUST be used when deriving SACM Content Metadata for
+The corresponding mapping MUST be used when deriving SACM Content Metadata for
 content-metadata items from YANG modeled data corresponding to YANG
 Notification Message Headers and Bundles:
 
