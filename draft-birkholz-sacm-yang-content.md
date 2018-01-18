@@ -230,15 +230,16 @@ has to be included in the content-metadata.
 <xs:complexType name="yang-output-metadata">
   <xs:sequence>
     <xs:choice maxOccurs="1">
-      <xs:element name="yang-query" type="yang-query" />
-      <xs:element name="yang-subscribe" type="yang-subscribe" />
+      <xs:element name="yang-query" type="yang-query-value" />
+      <xs:element name="yang-subscribtion" type="yang-subscribtion-type" />
     </xs:choice>
     <xs:element name="encoding" type="yang-encoding" />
     <xs:element name="module-names" type="module-name" minOccurs="0" maxOccurs="unbounded" />
+    <xs:element name="filter-expression" type="filter-expression-value" minOccurs="0" maxOccurs="1" />
   </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="yang-subscribe">
+<xs:complexType name="yang-subscribtion-type">
   <xs:restriction base="xs:NMTOKEN">
     <xs:enumeration value="periodic" />
     <xs:enumeration value="on-change" />
@@ -249,11 +250,11 @@ has to be included in the content-metadata.
   </xs:restriction>
 <xs:complexType>
 
-<xs:simpleType name="filter-expression">
+<xs:simpleType name="filter-expression-value">
   <xs:restriction base="xs:string" />
 </xs:simpleType>
 
-<xs:simpleType name="yang-query">
+<xs:simpleType name="yang-query-value">
   <xs:restriction base="xs:string" />
 </xs:simpleType>
 
@@ -271,6 +272,66 @@ has to be included in the content-metadata.
 <CODE ENDS>
 ~~~~
 
+# Mapping of YANG Bundled Notifications to SACM Metadata
+
+{{-yanghead}} include the following definition:
+
+~~~~
+
+       yang-data bundled-message
+          +-- bundled-message-header
+          |  +-- message-time                yang:date-and-time
+          |  +-- message-id?                 uint32
+          |  +-- previous-message-id?        uint32
+          |  +-- message-generator-id?       string
+          |  +-- signature?                  string
+          |  +-- notification-count?         uint16
+          +-- notifications*
+             +-- notification-header
+             |  +-- notification-time        yang:date-and-time
+             |  +-- subscription-id*         uint32
+             |  +-- notification-id?         uint32
+             |  +-- module?                  yang-identifier
+             |  +-- notification-type?       notification
+             |  +-- observation-domain-id?   string
+             +-- receiver-record-contents?
+~~~~
+
+The following mapping MUST be used when deriving SACM Content Metadata for
+content-metadata items from YANG modeled data corresponding to YANG
+Notification Message Headers and Bundles:
+
+~~~~
+        notification-time -> content-creation-timestamp
+        subscription-id + (observation-domain-id OR "SACM Component Label") -> content-element-guid
+        module -> module-names
+        notification-type -> yang-subscribtion-type
+        receiver-record-contents -> content-elements
+~~~~
+
+If there are more than one receiver-record-contents instanced included in the
+received Notification Message Bundle, multiple content-elements MUST be
+instanciated, accordingly.
+
+The following mapping MUST be used when deriving SACM Statement Metadata (see
+Appendix A) statement-metadata items representing  NETCONF instances adhering
+to the definition of YANG Notification Message Headers and Bundles:
+
+~~~~
+        message-id -> statement-guid
+        "SACM Component Label" -> data-origin
+        message-time -> statement-creation-timestamp
+        "SACM Component Publictation Time" -> statement-publish-timestamp
+        statement-type -> "Observation"
+~~~~
+
+"SACM Component Publicatation Time" can only be inferred by the SACM Component
+using its "most trustworthy source of time".
+
+If there is not receiver-record-contents included in the YANG notification, a
+SACM Component MUST NOT publish a corresponding SACM Statement to the SACM
+Domain.
+
 # SACM Component Composition
 
 A SACM Component able to process YANG subscribed notifications requires at
@@ -281,8 +342,8 @@ least two functions:
 * an xmpp-grid provider function {{-xmppgrid}}
 
 Orchestration of functions inside a component, their discovery as capabilities
-and the internal
-distribution of SACM Content inside a SACM Component is out of scope of this document. # for now
+and the internal distribution of SACM Content inside a SACM Component is out of
+scope of this document. # for now
 
 #  IANA considerations
 
