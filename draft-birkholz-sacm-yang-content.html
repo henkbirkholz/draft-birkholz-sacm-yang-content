@@ -289,13 +289,14 @@ address {
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Enumeration definition for content-type">
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 Element definition for content-metadata">
 <link href="#rfc.section.4.3" rel="Chapter" title="4.3 Definition of the yang-output-metadata element included in content-metadata">
-<link href="#rfc.section.5" rel="Chapter" title="5 SACM Component Composition">
-<link href="#rfc.section.6" rel="Chapter" title="6 IANA considerations">
-<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
-<link href="#rfc.section.8" rel="Chapter" title="8 Acknowledgements">
-<link href="#rfc.section.9" rel="Chapter" title="9 Change Log">
-<link href="#rfc.section.10" rel="Chapter" title="10 Contributors">
-<link href="#rfc.references" rel="Chapter" title="11 Normative References">
+<link href="#rfc.section.5" rel="Chapter" title="5 Mapping of YANG Bundled Notifications to SACM Metadata">
+<link href="#rfc.section.6" rel="Chapter" title="6 SACM Component Composition">
+<link href="#rfc.section.7" rel="Chapter" title="7 IANA considerations">
+<link href="#rfc.section.8" rel="Chapter" title="8 Security Considerations">
+<link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgements">
+<link href="#rfc.section.10" rel="Chapter" title="10 Change Log">
+<link href="#rfc.section.11" rel="Chapter" title="11 Contributors">
+<link href="#rfc.references" rel="Chapter" title="12 Normative References">
 <link href="#rfc.appendix.A" rel="Chapter" title="A Minimal SACM Statement Definition for YANG Output">
 <link href="#rfc.authors" rel="Chapter">
 
@@ -374,19 +375,21 @@ address {
 </li>
 <li>4.3.   <a href="#rfc.section.4.3">Definition of the yang-output-metadata element included in content-metadata</a>
 </li>
-</ul><li>5.   <a href="#rfc.section.5">SACM Component Composition</a>
+</ul><li>5.   <a href="#rfc.section.5">Mapping of YANG Bundled Notifications to SACM Metadata</a>
 </li>
-<li>6.   <a href="#rfc.section.6">IANA considerations</a>
+<li>6.   <a href="#rfc.section.6">SACM Component Composition</a>
 </li>
-<li>7.   <a href="#rfc.section.7">Security Considerations</a>
+<li>7.   <a href="#rfc.section.7">IANA considerations</a>
 </li>
-<li>8.   <a href="#rfc.section.8">Acknowledgements</a>
+<li>8.   <a href="#rfc.section.8">Security Considerations</a>
 </li>
-<li>9.   <a href="#rfc.section.9">Change Log</a>
+<li>9.   <a href="#rfc.section.9">Acknowledgements</a>
 </li>
-<li>10.   <a href="#rfc.section.10">Contributors</a>
+<li>10.   <a href="#rfc.section.10">Change Log</a>
 </li>
-<li>11.   <a href="#rfc.references">Normative References</a>
+<li>11.   <a href="#rfc.section.11">Contributors</a>
+</li>
+<li>12.   <a href="#rfc.references">Normative References</a>
 </li>
 <li>Appendix A.   <a href="#rfc.appendix.A">Minimal SACM Statement Definition for YANG Output</a>
 </li>
@@ -493,15 +496,16 @@ address {
 &lt;xs:complexType name="yang-output-metadata"&gt;
   &lt;xs:sequence&gt;
     &lt;xs:choice maxOccurs="1"&gt;
-      &lt;xs:element name="yang-query" type="yang-query" /&gt;
-      &lt;xs:element name="yang-subscribe" type="yang-subscribe" /&gt;
+      &lt;xs:element name="yang-query" type="yang-query-value" /&gt;
+      &lt;xs:element name="yang-subscribtion" type="yang-subscribtion-type" /&gt;
     &lt;/xs:choice&gt;
     &lt;xs:element name="encoding" type="yang-encoding" /&gt;
     &lt;xs:element name="module-names" type="module-name" minOccurs="0" maxOccurs="unbounded" /&gt;
+    &lt;xs:element name="filter-expression" type="filter-expression-value" minOccurs="0" maxOccurs="1" /&gt;
   &lt;/xs:sequence&gt;
 &lt;/xs:complexType&gt;
 
-&lt;xs:complexType name="yang-subscribe"&gt;
+&lt;xs:complexType name="yang-subscribtion-type"&gt;
   &lt;xs:restriction base="xs:NMTOKEN"&gt;
     &lt;xs:enumeration value="periodic" /&gt;
     &lt;xs:enumeration value="on-change" /&gt;
@@ -512,11 +516,11 @@ address {
   &lt;/xs:restriction&gt;
 &lt;xs:complexType&gt;
 
-&lt;xs:simpleType name="filter-expression"&gt;
+&lt;xs:simpleType name="filter-expression-value"&gt;
   &lt;xs:restriction base="xs:string" /&gt;
 &lt;/xs:simpleType&gt;
 
-&lt;xs:simpleType name="yang-query"&gt;
+&lt;xs:simpleType name="yang-query-value"&gt;
   &lt;xs:restriction base="xs:string" /&gt;
 &lt;/xs:simpleType&gt;
 
@@ -534,9 +538,51 @@ address {
 &lt;CODE ENDS&gt;
 </pre>
 <h1 id="rfc.section.5">
-<a href="#rfc.section.5">5.</a> <a href="#sacm-component-composition" id="sacm-component-composition">SACM Component Composition</a>
+<a href="#rfc.section.5">5.</a> <a href="#mapping-of-yang-bundled-notifications-to-sacm-metadata" id="mapping-of-yang-bundled-notifications-to-sacm-metadata">Mapping of YANG Bundled Notifications to SACM Metadata</a>
 </h1>
-<p id="rfc.section.5.p.1">A SACM Component able to process YANG subscribed notifications requires at least two functions:</p>
+<p><a href="#I-D.ietf-netconf-notification-messages" class="xref">[I-D.ietf-netconf-notification-messages]</a> include the following definition:</p>
+<pre>
+       yang-data bundled-message
+          +-- bundled-message-header
+          |  +-- message-time                yang:date-and-time
+          |  +-- message-id?                 uint32
+          |  +-- previous-message-id?        uint32
+          |  +-- message-generator-id?       string
+          |  +-- signature?                  string
+          |  +-- notification-count?         uint16
+          +-- notifications*
+             +-- notification-header
+             |  +-- notification-time        yang:date-and-time
+             |  +-- subscription-id*         uint32
+             |  +-- notification-id?         uint32
+             |  +-- module?                  yang-identifier
+             |  +-- notification-type?       notification
+             |  +-- observation-domain-id?   string
+             +-- receiver-record-contents?
+</pre>
+<p id="rfc.section.5.p.2">The following mapping MUST be used when deriving SACM Content Metadata for content-metadata items from YANG modeled data corresponding to YANG Notification Message Headers and Bundles:</p>
+<pre>
+        notification-time -&gt; content-creation-timestamp
+        subscription-id + (observation-domain-id OR "SACM Component Label") -&gt; content-element-guid
+        module -&gt; module-names
+        notification-type -&gt; yang-subscribtion-type
+        receiver-record-contents -&gt; content-elements
+</pre>
+<p id="rfc.section.5.p.3">If there are more than one receiver-record-contents instanced included in the received Notification Message Bundle, multiple content-elements MUST be instanciated, accordingly.</p>
+<p id="rfc.section.5.p.4">The following mapping MUST be used when deriving SACM Statement Metadata (see Appendix A) statement-metadata items representing  NETCONF instances adhering to the definition of YANG Notification Message Headers and Bundles:</p>
+<pre>
+        message-id -&gt; statement-guid
+        "SACM Component Label" -&gt; data-origin
+        message-time -&gt; statement-creation-timestamp
+        "SACM Component Publictation Time" -&gt; statement-publish-timestamp
+        statement-type -&gt; "Observation"
+</pre>
+<p id="rfc.section.5.p.5">"SACM Component Publicatation Time" can only be inferred by the SACM Component using its "most trustworthy source of time".</p>
+<p id="rfc.section.5.p.6">If there is not receiver-record-contents included in the YANG notification, a SACM Component MUST NOT publish a corresponding SACM Statement to the SACM Domain.</p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#sacm-component-composition" id="sacm-component-composition">SACM Component Composition</a>
+</h1>
+<p id="rfc.section.6.p.1">A SACM Component able to process YANG subscribed notifications requires at least two functions:</p>
 <p></p>
 
 <ul>
@@ -545,30 +591,30 @@ address {
 <li>an xmpp-grid provider function <a href="#I-D.ietf-mile-xmpp-grid" class="xref">[I-D.ietf-mile-xmpp-grid]</a>
 </li>
 </ul>
-<p id="rfc.section.5.p.3">Orchestration of functions inside a component, their discovery as capabilities and the internal distribution of SACM Content inside a SACM Component is out of scope of this document. # for now</p>
-<h1 id="rfc.section.6">
-<a href="#rfc.section.6">6.</a> <a href="#iana-considerations" id="iana-considerations">IANA considerations</a>
-</h1>
-<p id="rfc.section.6.p.1">This document includes requests to IANA.</p>
+<p id="rfc.section.6.p.3">Orchestration of functions inside a component, their discovery as capabilities and the internal distribution of SACM Content inside a SACM Component is out of scope of this document. # for now</p>
 <h1 id="rfc.section.7">
-<a href="#rfc.section.7">7.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
+<a href="#rfc.section.7">7.</a> <a href="#iana-considerations" id="iana-considerations">IANA considerations</a>
 </h1>
-<p id="rfc.section.7.p.1">TBD</p>
+<p id="rfc.section.7.p.1">This document includes requests to IANA.</p>
 <h1 id="rfc.section.8">
-<a href="#rfc.section.8">8.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
+<a href="#rfc.section.8">8.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
 </h1>
-<p id="rfc.section.8.p.1">Christoph Vigano, Guangying Zheng, Eric Voit, Alexander Clemm</p>
+<p id="rfc.section.8.p.1">TBD</p>
 <h1 id="rfc.section.9">
-<a href="#rfc.section.9">9.</a> <a href="#change-log" id="change-log">Change Log</a>
+<a href="#rfc.section.9">9.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
 </h1>
-<p id="rfc.section.9.p.1">First version -00</p>
-<p id="rfc.section.9.p.2">Second version -02 * generalized the content of the document, detaching it from the implementation created at the Hackaton of IETF 99 * included a mapping of the -03 version of the YANG Notification Headers and Bundles draft to this draft</p>
+<p id="rfc.section.9.p.1">Christoph Vigano, Guangying Zheng, Eric Voit, Alexander Clemm</p>
 <h1 id="rfc.section.10">
-<a href="#rfc.section.10">10.</a> <a href="#contributors" id="contributors">Contributors</a>
+<a href="#rfc.section.10">10.</a> <a href="#change-log" id="change-log">Change Log</a>
 </h1>
-<p id="rfc.section.10.p.1">Eric Voit</p>
+<p id="rfc.section.10.p.1">First version -00</p>
+<p id="rfc.section.10.p.2">Second version -02 * generalized the content of the document, detaching it from the implementation created at the Hackaton of IETF 99 * included a mapping of the -03 version of the YANG Notification Headers and Bundles draft to this draft</p>
+<h1 id="rfc.section.11">
+<a href="#rfc.section.11">11.</a> <a href="#contributors" id="contributors">Contributors</a>
+</h1>
+<p id="rfc.section.11.p.1">Eric Voit</p>
 <h1 id="rfc.references">
-<a href="#rfc.references">11.</a> Normative References</h1>
+<a href="#rfc.references">12.</a> Normative References</h1>
 <table><tbody>
 <tr>
 <td class="reference"><b id="I-D.ietf-mile-xmpp-grid">[I-D.ietf-mile-xmpp-grid]</b></td>

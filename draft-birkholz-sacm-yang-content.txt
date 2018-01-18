@@ -76,15 +76,16 @@ Table of Contents
      4.2.  Element definition for content-metadata . . . . . . . . .   5
      4.3.  Definition of the yang-output-metadata element included
            in content-metadata . . . . . . . . . . . . . . . . . . .   5
-   5.  SACM Component Composition  . . . . . . . . . . . . . . . . .   7
-   6.  IANA considerations . . . . . . . . . . . . . . . . . . . . .   7
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
-   9.  Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   10. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .   7
-   11. Normative References  . . . . . . . . . . . . . . . . . . . .   7
-   Appendix A.  Minimal SACM Statement Definition for YANG Output  .   8
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+   5.  Mapping of YANG Bundled Notifications to SACM Metadata  . . .   7
+   6.  SACM Component Composition  . . . . . . . . . . . . . . . . .   8
+   7.  IANA considerations . . . . . . . . . . . . . . . . . . . . .   8
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
+   10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+   11. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .   9
+   12. Normative References  . . . . . . . . . . . . . . . . . . . .   9
+   Appendix A.  Minimal SACM Statement Definition for YANG Output  .   9
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  29
 
 1.  Introduction
 
@@ -104,7 +105,6 @@ Table of Contents
    Elements on the Data Plane that represent information about Target
    Endpoints (TE) or Guidance.  Examples include: software identifiers,
    assessment guidance/results, ECA Policy rules, or VDD).
-
 
 
 
@@ -286,15 +286,16 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 <xs:complexType name="yang-output-metadata">
   <xs:sequence>
     <xs:choice maxOccurs="1">
-      <xs:element name="yang-query" type="yang-query" />
-      <xs:element name="yang-subscribe" type="yang-subscribe" />
+      <xs:element name="yang-query" type="yang-query-value" />
+      <xs:element name="yang-subscribtion" type="yang-subscribtion-type" />
     </xs:choice>
     <xs:element name="encoding" type="yang-encoding" />
     <xs:element name="module-names" type="module-name" minOccurs="0" maxOccurs="unbounded" />
+    <xs:element name="filter-expression" type="filter-expression-value" minOccurs="0" maxOccurs="1" />
   </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="yang-subscribe">
+<xs:complexType name="yang-subscribtion-type">
   <xs:restriction base="xs:NMTOKEN">
     <xs:enumeration value="periodic" />
     <xs:enumeration value="on-change" />
@@ -305,11 +306,11 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:restriction>
 <xs:complexType>
 
-<xs:simpleType name="filter-expression">
+<xs:simpleType name="filter-expression-value">
   <xs:restriction base="xs:string" />
 </xs:simpleType>
 
-<xs:simpleType name="yang-query">
+<xs:simpleType name="yang-query-value">
   <xs:restriction base="xs:string" />
 </xs:simpleType>
 
@@ -332,13 +333,75 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 
 
 
-
 Birkholz & Cam-Winget   Expires January 20, 2018                [Page 6]
 
 Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 
 
-5.  SACM Component Composition
+5.  Mapping of YANG Bundled Notifications to SACM Metadata
+
+   [I-D.ietf-netconf-notification-messages] include the following
+   definition:
+
+          yang-data bundled-message
+             +-- bundled-message-header
+             |  +-- message-time                yang:date-and-time
+             |  +-- message-id?                 uint32
+             |  +-- previous-message-id?        uint32
+             |  +-- message-generator-id?       string
+             |  +-- signature?                  string
+             |  +-- notification-count?         uint16
+             +-- notifications*
+                +-- notification-header
+                |  +-- notification-time        yang:date-and-time
+                |  +-- subscription-id*         uint32
+                |  +-- notification-id?         uint32
+                |  +-- module?                  yang-identifier
+                |  +-- notification-type?       notification
+                |  +-- observation-domain-id?   string
+                +-- receiver-record-contents?
+
+   The following mapping MUST be used when deriving SACM Content
+   Metadata for content-metadata items from YANG modeled data
+   corresponding to YANG Notification Message Headers and Bundles:
+
+        notification-time -> content-creation-timestamp
+        subscription-id + (observation-domain-id OR "SACM Component Label") -> content-element-guid
+        module -> module-names
+        notification-type -> yang-subscribtion-type
+        receiver-record-contents -> content-elements
+
+   If there are more than one receiver-record-contents instanced
+   included in the received Notification Message Bundle, multiple
+   content-elements MUST be instanciated, accordingly.
+
+   The following mapping MUST be used when deriving SACM Statement
+   Metadata (see Appendix A) statement-metadata items representing
+   NETCONF instances adhering to the definition of YANG Notification
+   Message Headers and Bundles:
+
+        message-id -> statement-guid
+        "SACM Component Label" -> data-origin
+        message-time -> statement-creation-timestamp
+        "SACM Component Publictation Time" -> statement-publish-timestamp
+        statement-type -> "Observation"
+
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018                [Page 7]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
+   "SACM Component Publicatation Time" can only be inferred by the SACM
+   Component using its "most trustworthy source of time".
+
+   If there is not receiver-record-contents included in the YANG
+   notification, a SACM Component MUST NOT publish a corresponding SACM
+   Statement to the SACM Domain.
+
+6.  SACM Component Composition
 
    A SACM Component able to process YANG subscribed notifications
    requires at least two functions:
@@ -355,19 +418,19 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
    capabilities and the internal distribution of SACM Content inside a
    SACM Component is out of scope of this document. # for now
 
-6.  IANA considerations
+7.  IANA considerations
 
    This document includes requests to IANA.
 
-7.  Security Considerations
+8.  Security Considerations
 
    TBD
 
-8.  Acknowledgements
+9.  Acknowledgements
 
    Christoph Vigano, Guangying Zheng, Eric Voit, Alexander Clemm
 
-9.  Change Log
+10.  Change Log
 
    First version -00
 
@@ -376,23 +439,27 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
    99 * included a mapping of the -03 version of the YANG Notification
    Headers and Bundles draft to this draft
 
-10.  Contributors
+
+
+
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018                [Page 8]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
+11.  Contributors
 
    Eric Voit
 
-11.  Normative References
+12.  Normative References
 
    [I-D.ietf-mile-xmpp-grid]
               Cam-Winget, N., Appala, S., Pope, S., and P. Saint-Andre,
               "Using XMPP for Security Information Exchange", draft-
               ietf-mile-xmpp-grid-04 (work in progress), October 2017.
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018                [Page 7]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
    [I-D.ietf-netconf-notification-messages]
               Voit, E., Bierman, A., Clemm, A., and T. Jenkins,
@@ -431,6 +498,14 @@ Appendix A.  Minimal SACM Statement Definition for YANG Output
 
    Due to the stripping down of content-elements to YANG output, the
    enumerations still included in the relationship-type are not able to
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018                [Page 9]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
    point to other types of content in the scope of this document, but
    are able to reference other content-types in the scope of the generic
    SACM Data Model.
@@ -442,14 +517,6 @@ Appendix A.  Minimal SACM Statement Definition for YANG Output
            elementFormDefault="qualified">
 
   <xs:complexType name="StatementMetadata">
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018                [Page 8]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
     <xs:sequence>
       <xs:element name="statement-guid" type="statement-guid" />
       <xs:element name="data-origin" type="data-origin" />
@@ -487,6 +554,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:simpleType>
 
   <xs:complexType name="statement-creation-timestamp">
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 10]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     <xs:sequence>
       <xs:element name="decimal-fraction-denominator" type="decimal-fraction-denominator"/>
       <xs:element name="decimal-fraction-numerator" type="decimal-fraction-numerator"/>
@@ -498,14 +573,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:element name="decimal-fraction-denominator" type="decimal-fraction-denominator"/>
       <xs:element name="decimal-fraction-numerator" type="decimal-fraction-numerator"/>
     </xs:sequence>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018                [Page 9]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
   </xs:complexType>
 
   <xs:simpleType name="statement-type">
@@ -544,6 +611,13 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
     <xs:restriction base="xs:string" />
   </xs:simpleType>
 
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 11]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
   <xs:complexType name="yang-output-metadata">
     <xs:sequence>
       <xs:choice maxOccurs="1">
@@ -554,13 +628,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:element name="module-names" type="module-name" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
   </xs:complexType>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 10]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
   <xs:complexType name="yang-subscribe">
     <xs:restriction base="xs:NMTOKEN">
@@ -599,6 +666,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:enumeration value="applies_to_session" />
       <xs:enumeration value="seen_on_interface" />
       <xs:enumeration value="associated_with_flow" />
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 12]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
       <xs:enumeration value="contains_virtual_device" />
     </xs:restriction>
   </xs:simpleType>
@@ -610,13 +685,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:simpleType name="relationship-statement-guid">
     <xs:restriction base="xs:string" />
   </xs:simpleType>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 11]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
   <xs:simpleType name="relationship-object-label">
     <xs:restriction base="xs:string" />
@@ -655,6 +723,13 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
     </xs:sequence>
   </xs:complexType>
 
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 13]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
   <xs:complexType name="flow-element">
     <xs:sequence>
       <xs:element name="network-address" type="network-address"/>
@@ -666,14 +741,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
     <xs:sequence>
       <xs:element name="src-flow-element" type="flow-element" />
       <xs:element name="dst-flow-element" type="flow-element" />
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 12]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
       <xs:element name="protocol" type="protocol" />
       <xs:element name="layer4-protocol" type="layer4-protocol" />
       <xs:element name="flow-statistics" type="flow-statistics" />
@@ -712,6 +779,13 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 
   <xs:complexType name="posture-assessment"></xs:complexType>
 
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 14]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
   <xs:complexType name="target-endpoint">
     <xs:sequence>
       <xs:element name="host-name" type="host-name" />
@@ -722,14 +796,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:element name="address-association" type="address-association" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="data-source" type="data-source" minOccurs="0" />
       <xs:element name="operating-system" type="operating-system" minOccurs="0" />
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 13]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
     </xs:sequence>
   </xs:complexType>
 
@@ -768,6 +834,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:simpleType>
 
   <xs:simpleType name="application-version">
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 15]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     <xs:restriction base="xs:string" />
   </xs:simpleType>
 
@@ -778,14 +852,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <!--     TODO: is it possible to declare this as an enumeration or is that unrealistic? -->
   <xs:simpleType name="application-type">
     <xs:restriction base="xs:string" />
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 14]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
   </xs:simpleType>
 
   <xs:simpleType name="application-component">
@@ -824,6 +890,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
     <xs:restriction base="xs:string">
       <xs:enumeration value="Ethernet" />
       <xs:enumeration value="ZigBee" />
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 16]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
       <xs:enumeration value="ModBus" />
     </xs:restriction>
   </xs:simpleType>
@@ -834,14 +908,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:enumeration value="Authenticated"></xs:enumeration>
       <xs:enumeration value="Postured"></xs:enumeration>
       <xs:enumeration value="Started"></xs:enumeration>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 15]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
       <xs:enumeration value="Disconnected"></xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
@@ -880,6 +946,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:element name="network-interface-name" type="network-interface-name" minOccurs="0"/>
       <xs:element name="mac-address" type="mac-address" />
       <xs:element name="network-name" type="network-name" minOccurs="0"/>
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 17]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
       <xs:element name="network-id" type="network-id" minOccurs="0"/>
       <xs:element name="layer2-interface-type" type="layer2-interface-type" minOccurs="0"/>
       <xs:element name="sub-interface-label" type="sub-interface-label" minOccurs="0" maxOccurs="unbounded"/>
@@ -890,13 +964,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:simpleType name="event-type">
     <xs:restriction base="xs:string" />
   </xs:simpleType>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 16]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
   <xs:simpleType name="event-threshold">
     <xs:restriction base="xs:integer" />
@@ -935,6 +1002,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:element name="event-trigger" type="event-trigger" minOccurs="0" />
       <xs:element name="typed-timestamp" type="typed-timestamp" />
       <xs:element name="content" type="xs:anySimpleType" />
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 18]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     </xs:sequence>
   </xs:complexType>
 
@@ -945,14 +1020,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:simpleType name="os-name">
     <xs:restriction base="xs:string" />
   </xs:simpleType>
-
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 17]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
   <xs:simpleType name="os-type">
     <xs:restriction base="xs:string">
@@ -991,6 +1058,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:simpleType>
 
   <xs:simpleType name="super-interface-label">
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 19]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     <xs:restriction base="xs:string" />
   </xs:simpleType>
 
@@ -1002,13 +1077,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:enumeration value="shared-backhaul-interface" />
     </xs:restriction>
   </xs:simpleType>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 18]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
   <xs:simpleType name="address-mask-value">
     <xs:restriction base="xs:string" />
@@ -1046,6 +1114,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="ipv6-address-value">
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 20]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     <xs:restriction base="xs:string">
     </xs:restriction>
   </xs:simpleType>
@@ -1058,14 +1134,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
     <xs:restriction base="xs:string">
     </xs:restriction>
   </xs:simpleType>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 19]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
   <xs:simpleType name="ipv4-address-value">
     <xs:restriction base="xs:string">
     </xs:restriction>
@@ -1102,6 +1170,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:complexType>
 
   <xs:complexType name="ipv6-address">
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 21]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     <xs:sequence>
       <xs:element name="ipv6-address-value" type="ipv6-address-value" />
       <xs:element name="ipv6-address-subnet-mask-cidrnot" type="ipv6-address-subnet-mask-cidrnot"/>
@@ -1114,14 +1190,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 
   <xs:simpleType name="layer4-port-address">
     <xs:restriction base="xs:string" />
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 20]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
   </xs:simpleType>
 
   <xs:simpleType name="protocol">
@@ -1158,6 +1226,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:complexType>
 
   <xs:complexType name="person">
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 22]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     <xs:sequence>
       <xs:element name="person-first-name" type="person-first-name" />
       <xs:element name="person-last-name" type="person-last-name" />
@@ -1170,13 +1246,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:simpleType name="person-first-name">
     <xs:restriction base="xs:string" />
   </xs:simpleType>
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 21]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
   <xs:simpleType name="person-last-name">
     <xs:restriction base="xs:string" />
@@ -1213,6 +1282,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
       <xs:enumeration value="Work" />
       <xs:enumeration value="Other" />
     </xs:restriction>
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 23]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
   </xs:simpleType>
 
   <xs:complexType name="privilege">
@@ -1225,14 +1302,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:simpleType name="privilege-name">
     <xs:restriction base="xs:string" />
   </xs:simpleType>
-
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 22]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
 
   <xs:simpleType name="privilege-value">
     <xs:restriction base="xs:string" />
@@ -1269,6 +1338,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:complexType name="organization">
     <xs:sequence>
       <xs:element name="organization-id" type="organization-id" />
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 24]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
       <xs:element name="organization-name" type="organization-name" />
       <xs:element name="location" type="location" minOccurs="0" />
     </xs:sequence>
@@ -1282,14 +1359,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:complexType>
 
   <xs:complexType name="administrative-domain">
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 23]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
     <xs:sequence>
       <xs:element name="administrative-domain-label" type="administrative-domain-label" />
       <xs:element name="sub-administrative-domain" type="sub-administrative-domain" minOccurs="0" maxOccurs="unbounded" />
@@ -1325,6 +1394,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:simpleType>
 
   <xs:simpleType name="certificate">
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 25]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
     <xs:restriction base="xs:string" />
   </xs:simpleType>
 
@@ -1338,14 +1415,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 
   <xs:simpleType name="confidence">
     <xs:restriction base="xs:float">
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 24]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
       <xs:minInclusive value="0" />
       <xs:maxInclusive value="1" />
     </xs:restriction>
@@ -1381,6 +1450,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 
   <xs:simpleType name="location-name">
     <xs:restriction base="xs:string" />
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 26]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
   </xs:simpleType>
 
   <xs:simpleType name="method-label">
@@ -1394,14 +1471,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:simpleType name="network-access-level-type">
     <xs:restriction base="xs:string">
       <xs:enumeration value="block" />
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 25]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
       <xs:enumeration value="quarantine" />
     </xs:restriction>
   </xs:simpleType>
@@ -1437,6 +1506,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   <xs:simpleType name="te-assessment-state">
     <xs:restriction base="xs:string">
       <xs:enumeration value="in-discovery" />
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 27]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
       <xs:enumeration value="discovered" />
       <xs:enumeration value="in-classification" />
       <xs:enumeration value="classified" />
@@ -1450,14 +1527,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:simpleType>
 
   <xs:simpleType name="web-site">
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 26]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
     <xs:restriction base="xs:string" />
   </xs:simpleType>
 
@@ -1493,6 +1562,14 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
     <xs:restriction base="xs:string">
       <xs:enumeration value="virtual-1g" />
     </xs:restriction>
+
+
+
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 28]
+
+Internet-DraYANG subscribed notifications via SACM Statements  July 2017
+
+
   </xs:simpleType>
 
   <xs:complexType name="port">
@@ -1506,14 +1583,6 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
   </xs:complexType>
 
   <xs:complexType name="user-account">
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 27]
-
-Internet-DraYANG subscribed notifications via SACM Statements  July 2017
-
-
     <xs:sequence>
       <xs:element name="user" type="user"/>
     </xs:sequence>
@@ -1552,17 +1621,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Birkholz & Cam-Winget   Expires January 20, 2018               [Page 28]
+Birkholz & Cam-Winget   Expires January 20, 2018               [Page 29]
