@@ -340,7 +340,7 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
 
 5.  Mapping of YANG Bundled Notifications to SACM Metadata
 
-   [I-D.ietf-netconf-notification-messages] include the following
+   [I-D.ietf-netconf-notification-messages] includes the following
    definition:
 
           yang-data bundled-message
@@ -361,7 +361,7 @@ Internet-DraYANG subscribed notifications via SACM Statements  July 2017
                 |  +-- observation-domain-id?   string
                 +-- receiver-record-contents?
 
-   The following mapping MUST be used when deriving SACM Content
+   The corresponding mapping MUST be used when deriving SACM Content
    Metadata for content-metadata items from YANG modeled data
    corresponding to YANG Notification Message Headers and Bundles:
 

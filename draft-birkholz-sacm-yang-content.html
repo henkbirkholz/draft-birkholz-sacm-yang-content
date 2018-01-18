@@ -540,7 +540,7 @@ address {
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#mapping-of-yang-bundled-notifications-to-sacm-metadata" id="mapping-of-yang-bundled-notifications-to-sacm-metadata">Mapping of YANG Bundled Notifications to SACM Metadata</a>
 </h1>
-<p><a href="#I-D.ietf-netconf-notification-messages" class="xref">[I-D.ietf-netconf-notification-messages]</a> include the following definition:</p>
+<p><a href="#I-D.ietf-netconf-notification-messages" class="xref">[I-D.ietf-netconf-notification-messages]</a> includes the following definition:</p>
 <pre>
        yang-data bundled-message
           +-- bundled-message-header
@@ -560,7 +560,7 @@ address {
              |  +-- observation-domain-id?   string
              +-- receiver-record-contents?
 </pre>
-<p id="rfc.section.5.p.2">The following mapping MUST be used when deriving SACM Content Metadata for content-metadata items from YANG modeled data corresponding to YANG Notification Message Headers and Bundles:</p>
+<p id="rfc.section.5.p.2">The corresponding mapping MUST be used when deriving SACM Content Metadata for content-metadata items from YANG modeled data corresponding to YANG Notification Message Headers and Bundles:</p>
 <pre>
         notification-time -&gt; content-creation-timestamp
         subscription-id + (observation-domain-id OR "SACM Component Label") -&gt; content-element-guid
