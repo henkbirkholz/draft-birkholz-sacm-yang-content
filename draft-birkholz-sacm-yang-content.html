@@ -19,20 +19,25 @@
 }
 
 @media screen and (min-width: 1024px) {
-  ul.toc, #rfc\.toc {
+  body>ul.toc, body>#rfc\.toc {
     position: fixed;
     bottom: 0;
     right: 0;
-    right: calc(50vw - 525px);
+    right: calc(50vw - 550px);
     width: 300px;
     z-index: 1;
   }
   #rfc\.toc {
-    top: 15px;
-  }
-  ul.toc {
-    top: 80px;
+    top: 55px;
     overflow: auto;
+    overscroll-behavior: contain;
+  }
+  ul.toc, #rfc\.toc {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  body>ul.toc {
+    top: 140px;
   }
 
   body {
@@ -41,11 +46,11 @@
 }
 
 body {
-  font: 15px "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font: 16px "Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #333;
   font-size-adjust: 0.5;
-  line-height: 130%;
-  margin: 25px auto;
+  line-height: 24px;
+  margin: 75px auto;
   max-width: 724px;
 }
 
@@ -58,7 +63,7 @@ body {
   margin: 0.8em 0 0.3em;
 }
 .title { font-size: 36px; }
-h1 { font-size: 30px; }
+h1 { font-size: 36px; }
 h2 { font-size: 24px; }
 h3, h4 { font-size: 18px; }
 h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
@@ -121,10 +126,9 @@ table.header td {
   height: auto;
   line-height: 100%;
 }
-#rfc\.abstract+p {
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 130%;
+#rfc\.abstract+p, #rfc\.abstract p {
+  font-size: 18px;
+  line-height: 27px%;
 }
 
 samp, tt, code, pre {
@@ -192,6 +196,9 @@ ul.empty li {
 hr {
   border: 0;
   border-top: 1px solid #eee;
+}
+hr.noprint {
+  display: none;
 }
 
 a {
@@ -293,14 +300,14 @@ address {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.7.0 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.8.4 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Birkholz, H. and N. Cam-Winget" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-birkholz-sacm-yang-content-latest" />
   <meta name="dct.issued" scheme="ISO8601" content="2017-7-19" />
-  <meta name="dct.abstract" content="This document summarizes the data model designed at the IETF 99 Hackathon and is intended to grow in to a definition of general XML SACM statements (and later JSON and CBOR, respectively) for virtually every kind of Content Element (e.g. software identifiers, assessment guidance/results, ECA Policy rules, VDD, etc.). The SACM Statement data structure is based on the Information Element (IE) definitions provided by the SACM Information Model. The initial Content Element type transferred are YANG Subscribed Notification acquired via YANG push. In combination with the Origin Metadata Annotation defined in draft-ietf-netmod-revised-datastores the data model defined in this document will ultimately be able to express collected endpoint characteristics, imperative guidance that define and orchestrate assessment instructions, and also the declarative guidance for endpoint attributes." />
-  <meta name="description" content="This document summarizes the data model designed at the IETF 99 Hackathon and is intended to grow in to a definition of general XML SACM statements (and later JSON and CBOR, respectively) for virtually every kind of Content Element (e.g. software identifiers, assessment guidance/results, ECA Policy rules, VDD, etc.). The SACM Statement data structure is based on the Information Element (IE) definitions provided by the SACM Information Model. The initial Content Element type transferred are YANG Subscribed Notification acquired via YANG push. In combination with the Origin Metadata Annotation defined in draft-ietf-netmod-revised-datastores the data model defined in this document will ultimately be able to express collected endpoint characteristics, imperative guidance that define and orchestrate assessment instructions, and also the declarative guidance for endpoint attributes." />
+  <meta name="dct.abstract" content="This document summarizes a subset of the emerging generic SACM Data Model for inter-component distribution of SACM Content in and between SACM Domains. The subset defined in this document is covering every information element that can be acquired using YANG based protocols, i.e. NETCONF, RESTCONF, COMI or derived mechanisms that transfer YANG modeled data, such as MUD. As subscriptions to data origins in a SACM domain are one of the architectural corner-stones of the SACM architecture, this document recommends the use of YANG Push, YANG subscribed Notifications and corresponding Notification Headers and Bundles. Analogously, a mapping of Notification Header content to SACM Metadata is provided in this document." />
+  <meta name="description" content="This document summarizes a subset of the emerging generic SACM Data Model for inter-component distribution of SACM Content in and between SACM Domains. The subset defined in this document is covering every information element that can be acquired using YANG based protocols, i.e. NETCONF, RESTCONF, COMI or derived mechanisms that transfer YANG modeled data, such as MUD. As subscriptions to data origins in a SACM domain are one of the architectural corner-stones of the SACM architecture, this document recommends the use of YANG Push, YANG subscribed Notifications and corresponding Notification Headers and Bundles. Analogously, a mapping of Notification Header content to SACM Metadata is provided in this document." />
 
 </head>
 
@@ -338,7 +345,7 @@ address {
   <span class="filename">draft-birkholz-sacm-yang-content-latest</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
-<p>This document summarizes the data model designed at the IETF 99 Hackathon and is intended to grow in to a definition of general XML SACM statements (and later JSON and CBOR, respectively) for virtually every kind of Content Element (e.g. software identifiers, assessment guidance/results, ECA Policy rules, VDD, etc.). The SACM Statement data structure is based on the Information Element (IE) definitions provided by the SACM Information Model. The initial Content Element type transferred are YANG Subscribed Notification acquired via YANG push. In combination with the Origin Metadata Annotation defined in draft-ietf-netmod-revised-datastores the data model defined in this document will ultimately be able to express collected endpoint characteristics, imperative guidance that define and orchestrate assessment instructions, and also the declarative guidance for endpoint attributes.</p>
+<p>This document summarizes a subset of the emerging generic SACM Data Model for inter-component distribution of SACM Content in and between SACM Domains. The subset defined in this document is covering every information element that can be acquired using YANG based protocols, i.e. NETCONF, RESTCONF, COMI or derived mechanisms that transfer YANG modeled data, such as MUD. As subscriptions to data origins in a SACM domain are one of the architectural corner-stones of the SACM architecture, this document recommends the use of YANG Push, YANG subscribed Notifications and corresponding Notification Headers and Bundles. Analogously, a mapping of Notification Header content to SACM Metadata is provided in this document.</p>
 <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
@@ -392,8 +399,11 @@ address {
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">YANG modules are a powerful established tool to provide endpoint attributes (IE) with well-defined semantics. YANG push <a href="#I-D.ietf-netconf-yang-push" class="xref">[I-D.ietf-netconf-yang-push]</a> and the corresponding YANG subscribed notification <a href="#I-D.ietf-netconf-subscribed-notifications" class="xref">[I-D.ietf-netconf-subscribed-notifications]</a> drafts make use of these modules to create streams of notifications (telemetry) providing SACM content on the data plane.  Correspondingly, filter expressions used in the context of YANG subscriptions constitute SACM content that is imperative guidance consumed by SACM components on the management plane.</p>
-<p id="rfc.section.1.p.2">The SACM component illustrated in this draft incorporates a YANG Push client function and an xmpp-grid publisher function. The output of the YANG Push client function is encapsulated in a SACM Content Element envelope, which is again encapsulated in a SACM statement envelope. The corresponding SACM statements are published via the xmpp-grid publisher function into a SACM Domain.</p>
+<p id="rfc.section.1.p.1">This document defines an XML encoding of SACM Statements that contain SACM Content composed of YANG modeled data (i.e. NETCONF messages).  Correspondingly, this documents provides a standardized mapping to derive SACM Metadata from YANG Subscribed Notifications <a href="#I-D.ietf-netconf-subscribed-notifications" class="xref">[I-D.ietf-netconf-subscribed-notifications]</a> using Notification Message Headers and Bundles <a href="#I-D.ietf-netconf-notification-messages" class="xref">[I-D.ietf-netconf-notification-messages]</a> content.</p>
+<p id="rfc.section.1.p.2">Every message defined in the generic SACM Data Model is a SACM Statement. The SACM Statement structure is provided by the SACM Information Model. In consequence, a SACM Statement is an Information Element not acquired by, but created by SACM Components for inter-component distribution of SACM Content (Information Elements on the Data Plane that represent information about Target Endpoints (TE) or Guidance. Examples include: software identifiers, assessment guidance/results, ECA Policy rules, or VDD).</p>
+<p id="rfc.section.1.p.3">YANG modules are a powerful established tool to provide Information Elements about Target Endpoints with well-defined semantics. YANG Push <a href="#I-D.ietf-netconf-yang-push" class="xref">[I-D.ietf-netconf-yang-push]</a> and the corresponding YANG Subscribed Notifications <a href="#I-D.ietf-netconf-subscribed-notifications" class="xref">[I-D.ietf-netconf-subscribed-notifications]</a> drafts make use of these modules to create streams of notifications (YANG telemetry). Subscriptions to YANG data stores or YANG streams are Data Sources that provide Information Elements that can be acquired by SACM Collectors to provide SACM Content on the Data Plane.</p>
+<p id="rfc.section.1.p.4">Analogously, filter expressions used in the context of YANG subscriptions constitute SACM Content that is Imperative Guidance consumed by SACM Components on the Management Plane in order to create YANG telemetry.</p>
+<p id="rfc.section.1.p.5">In this document (not including the abstract, of course), terms that are Capitalized or prefixed with SACM are defined in the SACM Terminology document.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#requirements-notation" id="requirements-notation">Requirements notation</a>
 </h1>
@@ -561,27 +571,32 @@ address {
 <tr>
 <td class="reference"><b id="I-D.ietf-mile-xmpp-grid">[I-D.ietf-mile-xmpp-grid]</b></td>
 <td class="top">
-<a>Cam-Winget, N.</a>, <a>Appala, S.</a> and <a>S. Pope</a>, "<a href="http://tools.ietf.org/html/draft-ietf-mile-xmpp-grid-03">Using XMPP Protocol and its Extensions for Use with IODEF</a>", Internet-Draft draft-ietf-mile-xmpp-grid-03, July 2017.</td>
+<a>Cam-Winget, N.</a>, <a>Appala, S.</a>, <a>Pope, S.</a> and <a>P. Saint-Andre</a>, "<a href="https://tools.ietf.org/html/draft-ietf-mile-xmpp-grid-04">Using XMPP for Security Information Exchange</a>", Internet-Draft draft-ietf-mile-xmpp-grid-04, October 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-netconf-notification-messages">[I-D.ietf-netconf-notification-messages]</b></td>
+<td class="top">
+<a>Voit, E.</a>, <a>Bierman, A.</a>, <a>Clemm, A.</a> and <a>T. Jenkins</a>, "<a href="https://tools.ietf.org/html/draft-ietf-netconf-notification-messages-02">Notification Message Headers and Bundles</a>", Internet-Draft draft-ietf-netconf-notification-messages-02, October 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-netconf-subscribed-notifications">[I-D.ietf-netconf-subscribed-notifications]</b></td>
 <td class="top">
-<a>Voit, E.</a>, <a>Clemm, A.</a>, <a>Prieto, A.</a>, <a>Nilsen-Nygaard, E.</a> and <a>A. Tripathy</a>, "<a href="http://tools.ietf.org/html/draft-ietf-netconf-subscribed-notifications-03">Custom Subscription to Event Notifications</a>", Internet-Draft draft-ietf-netconf-subscribed-notifications-03, July 2017.</td>
+<a>Voit, E.</a>, <a>Clemm, A.</a>, <a>Prieto, A.</a>, <a>Nilsen-Nygaard, E.</a> and <a>A. Tripathy</a>, "<a href="https://tools.ietf.org/html/draft-ietf-netconf-subscribed-notifications-08">Custom Subscription to Event Streams</a>", Internet-Draft draft-ietf-netconf-subscribed-notifications-08, December 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-netconf-yang-push">[I-D.ietf-netconf-yang-push]</b></td>
 <td class="top">
-<a>Clemm, A.</a>, <a>Voit, E.</a>, <a>Prieto, A.</a>, <a>Tripathy, A.</a>, <a>Nilsen-Nygaard, E.</a>, <a>Bierman, A.</a> and <a>B. Lengyel</a>, "<a href="http://tools.ietf.org/html/draft-ietf-netconf-yang-push-07">Subscribing to YANG datastore push updates</a>", Internet-Draft draft-ietf-netconf-yang-push-07, June 2017.</td>
+<a>Clemm, A.</a>, <a>Voit, E.</a>, <a>Prieto, A.</a>, <a>Tripathy, A.</a>, <a>Nilsen-Nygaard, E.</a>, <a>Bierman, A.</a> and <a>B. Lengyel</a>, "<a href="https://tools.ietf.org/html/draft-ietf-netconf-yang-push-12">YANG Datastore Subscription</a>", Internet-Draft draft-ietf-netconf-yang-push-12, December 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-sacm-information-model">[I-D.ietf-sacm-information-model]</b></td>
 <td class="top">
-<a>Waltermire, D.</a>, <a>Watson, K.</a>, <a>Kahn, C.</a>, <a>Lorenzin, L.</a>, <a>Cokus, M.</a>, <a>Haynes, D.</a> and <a>H. Birkholz</a>, "<a href="http://tools.ietf.org/html/draft-ietf-sacm-information-model-10">SACM Information Model</a>", Internet-Draft draft-ietf-sacm-information-model-10, April 2017.</td>
+<a>Waltermire, D.</a>, <a>Watson, K.</a>, <a>Kahn, C.</a>, <a>Lorenzin, L.</a>, <a>Cokus, M.</a>, <a>Haynes, D.</a> and <a>H. Birkholz</a>, "<a href="https://tools.ietf.org/html/draft-ietf-sacm-information-model-10">SACM Information Model</a>", Internet-Draft draft-ietf-sacm-information-model-10, April 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
 <td class="top">
-<a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+<a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
 </tr>
 </tbody></table>
 <h1 id="rfc.appendix.A">
@@ -1568,6 +1583,5 @@ address {
   </address>
 </div>
 
-  <div class="github-fork-ribbon-wrapper"><div class="github-fork-ribbon"><a href="https://github.com/henkbirkholz/draft-birkholz-sacm-yang-content">Fork me on GitHub</a></div></div>
 </body>
 </html>
