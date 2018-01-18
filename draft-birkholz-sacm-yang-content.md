@@ -113,27 +113,31 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in RFC
 2119, BCP 14 {{RFC2119}}.
 
-# Brokering of YANG push telemetry via SACM statements
+# Brokering of YANG Push Telemetry via SACM Statements
 
-Every SACM content is published into a SACM domain using a statement envelope/encapsulation. The
-general structure of a Statement is based in the Information Element defintion in {{-sacmim}} and can be summarized as follows:
+Every SACM Content is published into a SACM Domain using a statement
+envelope/encapsulation. The general structure of a SACM Statement is based on
+the Information Element definition found in {{-sacmim}} and can be summarized as
+follows:
 
-* a statement encapsulates statement-metadata and content-elements
-* a content-element encapsulates content-metadata and SACM content
+* a sacm-statement encapsulates statement-metadata and content-elements
+* a content-element encapsulates content-metadata and SACM Content
 
-In the scope of this document, only one type of SACM content is covered: YANG output.
-Correspondingly, only the minimal required structure of statements, statement-metadata,
-content-elements, and content-metadata are defined. A complete XML schema definition of this
-minimal statement can be found in Appendix A.
+In the scope of this document, only one type of SACM Content is covered: YANG
+modeled data. Correspondingly, the minimal required structure of
+statements, statement-metadata, content-elements, and content-metadata are
+defined. A complete XML schema definition of this subset of the generic SACM
+Data Model can be found in Appendix A.
 
 # Encapsulation of YANG notifications in SACM content-elements
 
-A YANG notification is associated with a set of YANG specific metadata. Hence, a YANG notification
-published to a SACM Domain MUST be encapsulated with its corresponding metadata in a Content
-Element as defined below.
+A YANG notification is associated with a set of YANG specific metadata as
+defined in {{-yanghead}}. Hence, SACM Content that is derived from a YANG
+notification published to a SACM Domain MUST be encapsulated with its
+corresponding Metadata in a content-element as defined below.
 
-YANG output that is SACM content is represented as an element defintion included in the content
-choice of the content-element.
+YANG output that is SACM Content MUST be represented according to the XSD
+definition included in the content choice of the content-element.
 
 ~~~~ XSD
 <CODE BEGINS>
@@ -152,13 +156,17 @@ choice of the content-element.
 
 ## Enumeration definition for content-type
 
-One occurrence of the yang-output element MUST be instantiated in the content-metadata element if
-YANG push output is to be transferred. Also, the content-type must be set to the enumeration value
+An occurrence of the yang-output element MUST be instantiated in the
+content-metadata element, if YANG Push output is to be transferred. Also, the
+content-type MUST be set to the enumeration value
 "yang-output", respectively.
 
-In general, the list of content-type enumerations is including every subject as defined in the SACM
-Information Model. For the scope of this document, the list of potential content is reduced to
-"yang-output" only.
+In general, the list of content-type enumerations is including every subject as
+defined in the SACM Information Model. Regarding the definition of the subset
+of the generic SACM Data Model provided by this document, the list of potential
+content-types is reduced to "yang-output". Please note, that the complete
+generic SACM Data Model includes additional content-type enumerations next to
+the definition provided by this document.
 
 ~~~~ XSD
 <CODE BEGINS>
@@ -174,13 +182,16 @@ Information Model. For the scope of this document, the list of potential content
 
 ## Element definition for content-metadata
 
-The list of optional elements included in content-metadata will incorporate any every potential
-metadata type. For the scope of this document, the list of elements is also limited to the minimal
-required set of metadata elements and the yang-output metadata element to support the encapsulation
-of NETCONF subscribed notifications and YANG query result. As defined above, one occurrence of the
-yang-output element has to be included in the content-metadata element.
+The list of optional elements included in content-metadata will incorporate any
+every potential metadata type. For the scope of this document, the list of
+elements is also limited to the minimal required set of metadata elements and
+the yang-output metadata element to support the encapsulation of NETCONF
+encoded subscribed notifications or YANG query result. As defined above, one
+occurrence of the yang-output element has to be included in the
+content-metadata element.
 
-The general content-metadata elements are illustrated in the Appendix A.
+A more complete content-metadata element definition is illustrated in the
+Appendix A.
 
 ~~~~ XSD
 <CODE BEGINS>
@@ -201,15 +212,18 @@ The general content-metadata elements are illustrated in the Appendix A.
 
 ## Definition of the yang-output-metadata element included in content-metadata
 
-The composition of metadata that can be associated with a XML NETCONF result depends on multiple
-factors:
+The composition of metadata that can be associated with a XML NETCONF result
+depends on multiple factors:
 
 * acquisition method: query / subscription
-* encoding: XML / JSON / CBOR
+* encoding: XML # more content encodings will be supported as indicated by the
+  definition
 * subscription interval: periodic / on-change
 * filter-type: xpath / subtree
 
-Additionally, the actual filter expression (or in future iterations of this work a referencing label, such as a URI, UUID or other composed identifier) has to be included in the content-metadata.
+Additionally, the actual filter expression (or in future iterations of this
+work, a referencing Label, such as a URI, UUID or other composed identifier)
+has to be included in the content-metadata.
 
 ~~~~ XSD
 <CODE BEGINS>
@@ -259,13 +273,16 @@ Additionally, the actual filter expression (or in future iterations of this work
 
 # SACM Component Composition
 
-A SACM Component able to process YANG subscribed notifications requires at least two functions:
+A SACM Component able to process YANG subscribed notifications requires at
+least two functions:
 
-* a YANG push client function {{-yangpush}}, {{-yangnote}}
+* a SACM Function supporting YANG Push and YANG Notification Headers and
+* Bundles function {{-yangpush}}, {{-yangnote}}, and
 * an xmpp-grid provider function {{-xmppgrid}}
 
-Orchestattion of functions inside a component, their discovery as capabiliites and the internal
-communication of SACM content inside a SACM component is out of scope of this document for now.
+Orchestration of functions inside a component, their discovery as capabilities
+and the internal
+distribution of SACM Content inside a SACM Component is out of scope of this document. # for now
 
 #  IANA considerations
 
@@ -283,16 +300,27 @@ Christoph Vigano, Guangying Zheng, Eric Voit, Alexander Clemm
 
 First version -00
 
+Second version -02
+* generalized the content of the document, detaching it from the implementation
+  created at the Hackaton of IETF 99
+* included a mapping of the -03 version of the YANG Notification Headers and
+  Bundles draft to this draft
+
 # Contributors
+
+Eric Voit
 
 --- back
 
 # Minimal SACM Statement Definition for YANG Output
 
-The definitions of statements, statement-metadata, content-element, and content-metadata are provided by the SACM Information Model {{-sacmim}}.
+The definitions of statements, statement-metadata, content-element, and
+content-metadata are provided by the SACM Information Model {{-sacmim}}.
 
-Due to the stripping down of content-elements to YANG output, the enumerations still included in the
-relationship type are not able to point to other content actually.
+Due to the stripping down of content-elements to YANG output, the enumerations
+still included in the relationship-type are not able to point to other types of
+content in the scope of this document, but are able to reference other
+content-types in the scope of the generic SACM Data Model.
 
 ~~~~ XSD
 <CODE BEGINS>
