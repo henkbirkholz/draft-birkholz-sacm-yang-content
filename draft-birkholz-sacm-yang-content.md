@@ -38,46 +38,73 @@ author:
 
 normative:
   RFC2119:
-#  RFC3635:
-#  RFC1573:
-#  I-D.greevenbosch-appsawg-cbor-cddl: cddl
-#  I-D.ietf-sacm-architecture-13:
   I-D.ietf-netconf-subscribed-notifications: yangnote
   I-D.ietf-netconf-yang-push: yangpush
+  I-D.ietf-netconf-notification-messages: yanghead
   I-D.ietf-sacm-information-model: sacmim
   I-D.ietf-mile-xmpp-grid: xmppgrid
-
 informative:
-#  RFC7632:
-#  I-D.ietf-sacm-requirements: sacm-req
 
 --- abstract
 
-This document summarizes the data model designed at the IETF 99 Hackathon and is intended to grow in
-to a definition of general XML SACM statements (and later JSON and CBOR, respectively) for virtually
-every kind of Content Element (e.g. software identifiers, assessment guidance/results, ECA Policy
-rules, VDD, etc.). The SACM Statement data structure is based on the Information Element (IE) definitions
+This document summarizes a subset of the emerging generic SACM Data Model for
+inter-component distribution of SACM Content in and between SACM Domains. The
+subset defined in this document is covering every information element that can
+be acquired using YANG based protocols, i.e. NETCONF, RESTCONF, COMI or derived
+mechanisms that transfer YANG modeled data, such as MUD. As subscriptions to data
+origins in a SACM domain are one of the architectural corner-stones of the SACM
+architecture, this document recommends the use of YANG Push, YANG subscribed
+Notifications and corresponding Notification Headers and Bundles. Analogously, a
+mapping of Notification Header content to SACM Metadata is provided in this
+document.
+
+<!--
 provided by the SACM Information Model. The initial Content Element type transferred are YANG
 Subscribed Notification acquired via YANG push. In combination with the Origin Metadata Annotation
 defined in draft-ietf-netmod-revised-datastores the data model defined in this document will
 ultimately be able to express collected endpoint characteristics, imperative guidance that define and
 orchestrate assessment instructions, and also the declarative guidance for endpoint attributes.
-
+-->
 --- middle
 
 # Introduction
 
-YANG modules are a powerful established tool to provide endpoint attributes (IE) with well-defined
-semantics. YANG push {{-yangpush}} and the corresponding YANG subscribed notification {{-yangnote}} drafts
-make use of these modules to create streams of notifications (telemetry) providing SACM content on
-the data plane.
-Correspondingly, filter expressions used in the context of YANG subscriptions constitute SACM
-content that is imperative guidance consumed by SACM components on the management plane.
+This document defines an XML encoding of SACM Statements that contain SACM
+Content composed of YANG modeled data (i.e. NETCONF messages).
+Correspondingly, this documents provides a standardized mapping to derive SACM
+Metadata from YANG Subscribed Notifications {{-yangnote}} using Notification
+Message Headers and Bundles {{-yanghead}} content.
 
+Every message defined in the generic SACM Data Model is a SACM Statement. The
+SACM Statement structure is provided by the SACM Information Model. In
+consequence, a SACM Statement is an Information Element not acquired by, but
+created by SACM Components for inter-component distribution of SACM Content
+(Information Elements on the Data Plane that represent information about Target
+Endpoints (TE) or Guidance. Examples include: software identifiers, assessment
+guidance/results, ECA Policy rules, or VDD).
+
+YANG modules are a powerful established tool to provide Information Elements
+about Target Endpoints with well-defined semantics. YANG Push {{-yangpush}} and
+the corresponding YANG Subscribed Notifications {{-yangnote}} drafts make use of
+these modules to create streams of notifications (YANG telemetry). Subscriptions
+to YANG data stores or YANG streams are Data Sources that provide Information
+Elements that can be acquired by SACM Collectors to provide SACM Content on the
+Data Plane.
+
+Analogously, filter expressions used in the context of YANG subscriptions
+constitute SACM Content that is Imperative Guidance consumed by SACM Components
+on the Management Plane in order to create YANG telemetry.
+
+In this document (not including the abstract, of course), terms that are
+Capitalized or prefixed with SACM are defined in the SACM Terminology document.
+
+<!--
+A SACM Component that collects Target Endpoint Information Elements (TI)
 The SACM component illustrated in this draft incorporates a YANG Push client function and an
 xmpp-grid publisher function. The output of the YANG Push client function is encapsulated in a SACM
 Content Element envelope, which is again encapsulated in a SACM statement envelope. The
 corresponding SACM statements are published via the xmpp-grid publisher function into a SACM Domain.
+-->
 
 # Requirements notation
 
